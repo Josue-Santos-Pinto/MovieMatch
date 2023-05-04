@@ -11,21 +11,15 @@ import {
 } from './styles';
 import api from '../../services/api';
 import { IMG } from '../../keys';
-
-type listType = {
-  id: number;
-  backdrop_path: string;
-  original_language: string;
-  title: string;
-  overview: string;
-};
+import { Movie } from '../../models';
 
 type propsType = {
   name: string;
+  movies?: Movie[];
 };
 
-export function MovieList({ name }: propsType) {
-  const [list, setList] = useState<listType[]>([]);
+export function MovieList({ name, movies }: propsType) {
+  const [list, setList] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(false);
 
   const getTrendingMovieList = async () => {
@@ -44,7 +38,7 @@ export function MovieList({ name }: propsType) {
 
   useEffect(() => {
     switch (name) {
-      case 'Trendind now':
+      case 'Trending now':
         getTrendingMovieList();
         break;
       case 'Top Rated':
@@ -52,10 +46,6 @@ export function MovieList({ name }: propsType) {
         break;
     }
   }, []);
-
-  useEffect(() => {
-    console.log(list);
-  }, [list]);
 
   return (
     <MoviesListArea>
@@ -65,11 +55,19 @@ export function MovieList({ name }: propsType) {
       </MovieCatArea>
       <MovieItemArea>
         <Scroller horizontal showsHorizontalScrollIndicator={false}>
-          {loading == false &&
-            list.length > 0 &&
+          {name != 'Trending now' &&
+            name != 'Top Rated' &&
+            movies != undefined &&
+            movies.map((item, index) => (
+              <MovieItem key={item.id}>
+                <MovieImg source={{ uri: IMG + item.poster_path }} />
+              </MovieItem>
+            ))}
+
+          {list != undefined &&
             list.map((item, index) => (
               <MovieItem key={item.id}>
-                <MovieImg source={{ uri: IMG + item.backdrop_path }} />
+                <MovieImg source={{ uri: IMG + item.poster_path }} />
               </MovieItem>
             ))}
         </Scroller>

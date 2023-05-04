@@ -32,7 +32,8 @@ export const MovieItem = styled.TouchableOpacity`
   border-radius: 10px;
   margin-right: 18px;
   overflow: hidden;
-  background-color: red;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const MovieImg = styled.Image`
