@@ -19,13 +19,6 @@ export function Home() {
   }, [genresData]);
 
   useEffect(() => {
-    genres.map(async (item) => {
-      let res = await api.getGenresMoviesList(item.id);
-      setMovies(res.results);
-    });
-  }, [genres]);
-
-  useEffect(() => {
     console.log(movies);
   }, [movies]);
 
@@ -39,11 +32,14 @@ export function Home() {
           </HeaderSearch>
         </HeaderArea>
 
-        <MovieList name="Trending now" />
-        <MovieList name="Top Rated" />
-        {genres.map((item) => {
-          return <MovieList key={item.id} name={item.name} movies={movies} />;
-        })}
+        <MovieList name="Trending now" id={1} />
+        <MovieList name="Top Rated" id={2} />
+        <MovieList name="Action" id={28} />
+        <MovieList name="Adventure" id={12} />
+        <MovieList name="Animation" id={16} />
+        <MovieList name="Comedy" id={35} />
+        <MovieList name="Drama" id={18} />
+        <MovieList name="Horror" id={27} />
       </Scroller>
     </Container>
   );
