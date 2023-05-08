@@ -32,14 +32,3 @@ export const HeaderSearch = styled.View`
   justify-content: center;
   align-items: center;
 `;
-export const MoviesList = styled.View`
-  flex: 1;
-  padding: 10px;
-`;
-export const MovieBanner = styled.TouchableOpacity`
-  width: 140px;
-  height: 250px;
-  background-color: red;
-  margin-top: 10px;
-  border-radius: 10px;
-`;

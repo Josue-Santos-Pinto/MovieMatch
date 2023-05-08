@@ -6,8 +6,8 @@ export default {
     let res = await axios.get(`${API_URL}popular?api_key=${KEY}`);
     return res.data;
   },
-  getTopMovies: async () => {
-    let res = await axios.get(`${API_URL}top_rated?api_key=${KEY}`);
+  getTopMovies: async (page: number) => {
+    let res = await axios.get(`${API_URL}top_rated?api_key=${KEY}&page=${page}&language=pt`);
     return res.data;
   },
   getGenresMovies: async () => {

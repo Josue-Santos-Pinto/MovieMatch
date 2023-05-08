@@ -1,46 +1,67 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Scroller, HeaderArea, HeaderAvatar, HeaderSearch } from './styles';
+import {
+  Container,
+  Scroller,
+  HeaderArea,
+  HeaderAvatar,
+  HeaderSearch,
+  MoviesList,
+  MovieBanner,
+} from './styles';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { MovieList } from '../../components/MovieList';
 import { useQuery } from 'react-query';
 import { Genre, Movie } from '../../models';
 import api from '../../services/api';
+import { FlatList } from 'react-native';
+import { ListItem } from '../../components/ListItem';
+import { FooterList } from '../../components/FooterList';
 export function Home() {
-  const [genres, setGenres] = useState<Genre[]>([]);
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [list, setList] = useState<Movie[]>([]);
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { data: genresData } = useQuery('genres', async () => {
-    return await api.getGenresMovies();
-  });
-  useEffect(() => {
-    if (genresData) {
-      setGenres(genresData.genres);
+  const loadApi = async () => {
+    if (isLoading == true) {
+      return;
+    } else {
+      setIsLoading(true);
+      const response = await api.getTopMovies(page);
+
+      setList([...list, ...response.results]);
+      setPage(page + 1);
+      setIsLoading(false);
     }
-  }, [genresData]);
+  };
+  useEffect(() => {
+    loadApi();
+  }, []);
 
   useEffect(() => {
-    console.log(movies);
-  }, [movies]);
+    console.log(list);
+  }, [list]);
+
+  const length = list.length;
 
   return (
     <Container>
-      <Scroller>
-        <HeaderArea>
-          <HeaderAvatar></HeaderAvatar>
-          <HeaderSearch>
-            <FontAwesome5 name="search" size={25} color="#fff" />
-          </HeaderSearch>
-        </HeaderArea>
-
-        <MovieList name="Trending now" id={1} />
-        <MovieList name="Top Rated" id={2} />
-        <MovieList name="Action" id={28} />
-        <MovieList name="Adventure" id={12} />
-        <MovieList name="Animation" id={16} />
-        <MovieList name="Comedy" id={35} />
-        <MovieList name="Drama" id={18} />
-        <MovieList name="Horror" id={27} />
-      </Scroller>
+      <HeaderArea>
+        <HeaderAvatar></HeaderAvatar>
+        <HeaderSearch>
+          <FontAwesome5 name="search" size={25} color="#fff" />
+        </HeaderSearch>
+      </HeaderArea>
+      <MoviesList>
+        <FlatList
+          data={list}
+          renderItem={({ item, index }) => <ListItem data={item} isLast={index === length - 1} />}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          showsVerticalScrollIndicator={false}
+          onEndReached={loadApi}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={<FooterList load={isLoading} />}
+        />
+      </MoviesList>
     </Container>
   );
 }
