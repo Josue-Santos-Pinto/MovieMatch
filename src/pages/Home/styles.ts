@@ -1,5 +1,9 @@
 import styled from 'styled-components/native';
 
+type ButtonProp = {
+  active: boolean;
+};
+
 export const Container = styled.View`
   flex: 1;
   background-color: #0a0a0a;
@@ -40,14 +44,14 @@ export const GenresArea = styled.View`
   padding-horizontal: 20px;
   margin-top: 20px;
 `;
-export const GenresButton = styled.TouchableOpacity`
+export const GenresButton = styled.TouchableOpacity<ButtonProp>`
   padding: 8px;
-  background-color: #ccc;
+  background-color: ${(props) => (props.active ? '#4764e6' : '#ccc')};
   margin-horizontal: 8px;
   border-radius: 5px;
 `;
-export const GenresText = styled.Text`
-  color: black;
+export const GenresText = styled.Text<ButtonProp>`
+  color: ${(props) => (props.active ? '#fff' : '#000')};
 `;
 export const MoviesList = styled.View`
   flex: 1;

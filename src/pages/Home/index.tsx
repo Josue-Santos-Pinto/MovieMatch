@@ -77,8 +77,12 @@ export function Home() {
         <Scroller horizontal showsHorizontalScrollIndicator={false}>
           {genresList != undefined &&
             genresList.map((item, index) => (
-              <GenresButton key={item.id} onPress={() => getMoviesList(item.id)}>
-                <GenresText>{item.name}</GenresText>
+              <GenresButton
+                key={item.id}
+                onPress={() => getMoviesList(item.id)}
+                active={item.id === currentGenre}
+              >
+                <GenresText active={item.id === currentGenre}>{item.name}</GenresText>
               </GenresButton>
             ))}
         </Scroller>
