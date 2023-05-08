@@ -11,11 +11,13 @@ export default {
     return res.data;
   },
   getGenresMovies: async () => {
-    let res = await axios.get(`${API_GENRES}?api_key=${KEY}`);
+    let res = await axios.get(`${API_GENRES}?api_key=${KEY}&language=pt`);
     return res.data;
   },
-  getGenresMoviesList: async (id: number) => {
-    let res = await axios.get(`${API_BASE_URL}discover/movie?api_key=${KEY}&with_genres=${id}`);
+  getGenresMoviesList: async (id: number, page: number) => {
+    let res = await axios.get(
+      `${API_BASE_URL}discover/movie?api_key=${KEY}&with_genres=${id}&page=${page}&language=pt`
+    );
     return res.data;
   },
 };

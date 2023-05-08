@@ -32,6 +32,23 @@ export const HeaderSearch = styled.View`
   justify-content: center;
   align-items: center;
 `;
+export const GenresArea = styled.View`
+  width: 100%;
+  height: 70px;
+  flex-direction: row;
+  align-items: center;
+  padding-horizontal: 20px;
+  margin-top: 20px;
+`;
+export const GenresButton = styled.TouchableOpacity`
+  padding: 8px;
+  background-color: #ccc;
+  margin-horizontal: 8px;
+  border-radius: 5px;
+`;
+export const GenresText = styled.Text`
+  color: black;
+`;
 export const MoviesList = styled.View`
   flex: 1;
   padding: 10px;
@@ -39,7 +56,6 @@ export const MoviesList = styled.View`
 export const MovieBanner = styled.TouchableOpacity`
   width: 140px;
   height: 250px;
-  background-color: red;
   margin-top: 10px;
   border-radius: 10px;
 `;

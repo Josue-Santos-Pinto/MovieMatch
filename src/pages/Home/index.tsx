@@ -5,6 +5,9 @@ import {
   HeaderArea,
   HeaderAvatar,
   HeaderSearch,
+  GenresArea,
+  GenresButton,
+  GenresText,
   MoviesList,
   MovieBanner,
 } from './styles';
@@ -17,31 +20,49 @@ import { ListItem } from '../../components/ListItem';
 import { FooterList } from '../../components/FooterList';
 export function Home() {
   const [list, setList] = useState<Movie[]>([]);
+  const [genresList, setGenresList] = useState<Genre[]>([]);
   const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const [hasMoreData, setHasMoreData] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const length = list.length;
+
+  const { data: genresData } = useQuery('genres', async () => {
+    return await api.getGenresMovies();
+  });
 
   const loadApi = async () => {
-    if (isLoading == true) {
+    if (loading == true) {
+      return;
+    }
+    if (!hasMoreData) {
       return;
     } else {
-      setIsLoading(true);
+      setLoading(true);
       const response = await api.getTopMovies(page);
 
       setList([...list, ...response.results]);
       setPage(page + 1);
-      setIsLoading(false);
+      setLoading(false);
     }
+  };
+  const getMoviesList = async (id: number) => {
+    let res = await api.getGenresMoviesList(id, page);
+    setList(res.results);
   };
   useEffect(() => {
     loadApi();
   }, []);
 
   useEffect(() => {
-    console.log(list);
-  }, [list]);
+    if (genresData) {
+      setGenresList(genresData.genres);
+    }
+  }, [genresData]);
 
-  const length = list.length;
-
+  useEffect(() => {
+    if (page < 500) setHasMoreData(true);
+  }, [page]);
   return (
     <Container>
       <HeaderArea>
@@ -50,6 +71,16 @@ export function Home() {
           <FontAwesome5 name="search" size={25} color="#fff" />
         </HeaderSearch>
       </HeaderArea>
+      <GenresArea>
+        <Scroller horizontal showsHorizontalScrollIndicator={false}>
+          {genresList != undefined &&
+            genresList.map((item, index) => (
+              <GenresButton onPress={() => getMoviesList(item.id)}>
+                <GenresText>{item.name}</GenresText>
+              </GenresButton>
+            ))}
+        </Scroller>
+      </GenresArea>
       <MoviesList>
         <FlatList
           data={list}
@@ -59,7 +90,7 @@ export function Home() {
           showsVerticalScrollIndicator={false}
           onEndReached={loadApi}
           onEndReachedThreshold={0.1}
-          ListFooterComponent={<FooterList load={isLoading} />}
+          ListFooterComponent={<FooterList load={loading} />}
         />
       </MoviesList>
     </Container>
