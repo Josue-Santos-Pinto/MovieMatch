@@ -13,7 +13,7 @@ export function ListItem({ data, isLast }: dataProps) {
     <Item activeOpacity={0.7}>
       <ItemImg source={{ uri: `${IMG}${data.poster_path}` }} resizeMode="cover" />
       <StarsArea>
-        <StarsText>{`${data.vote_average}/10`}</StarsText>
+        <StarsText>{`${data.vote_average.toFixed(1)}/10`}</StarsText>
       </StarsArea>
     </Item>
   );

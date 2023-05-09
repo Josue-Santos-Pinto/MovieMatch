@@ -18,17 +18,19 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useQuery } from 'react-query';
 import { Genre, Movie } from '../../models';
 import api from '../../services/api';
-import { FlatList } from 'react-native';
+import { FlatList, Alert } from 'react-native';
 import { ListItem } from '../../components/ListItem';
 import { FooterList } from '../../components/FooterList';
 import Animated, {
   FadeIn,
+  FadeOut,
   Keyframe,
   SlideInLeft,
   SlideInRight,
   SlideInUp,
   SlideOutRight,
 } from 'react-native-reanimated';
+import { useNavigation } from '@react-navigation/native';
 export function Home() {
   const [list, setList] = useState<Movie[]>([]);
   const [genresList, setGenresList] = useState<Genre[]>([]);
@@ -38,6 +40,8 @@ export function Home() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [showInput, setShowInput] = useState(false);
+
+  const navigation = useNavigation();
 
   const length = list.length;
 
@@ -66,6 +70,15 @@ export function Home() {
     setCurrentGenre(id);
   };
 
+  const searchMovie = () => {
+    if (search.trim() != '') {
+      navigation.navigate('Search', { query: search });
+      setSearch('');
+    } else {
+      Alert.alert('Aviso', 'É necessário preencher o campo de pesquisa.');
+    }
+  };
+
   useEffect(() => {
     loadApi();
   }, []);
@@ -80,60 +93,24 @@ export function Home() {
     if (page < 500) setHasMoreData(true);
   }, [page]);
 
-  const enteringKeyframe = new Keyframe({
-    0: {
-      width: 0,
-      transform: [{ translateX: 190 }],
-    },
-    20: {
-      width: 50,
-      transform: [{ translateX: 150 }],
-    },
-    40: {
-      width: 100,
-      transform: [{ translateX: 110 }],
-    },
-    60: {
-      width: 130,
-      transform: [{ translateX: 70 }],
-    },
-    80: {
-      width: 170,
-      transform: [{ translateX: 30 }],
-    },
-    100: {
-      width: 200,
-      transform: [{ translateX: 0 }],
-    },
-  });
-
-  const exitingKeyframe = new Keyframe({
-    from: {
-      width: 200,
-      transform: [{ translateX: 0 }],
-    },
-    to: {
-      width: 0,
-      transform: [{ translateX: 190 }],
-    },
-  });
-
   return (
     <Container>
       <HeaderArea>
         <HeaderAvatar></HeaderAvatar>
         <HeaderSearch>
           {showInput && (
-            <HeaderSearchInputArea
-              entering={enteringKeyframe.duration(500)}
-              exiting={exitingKeyframe.duration(500)}
-            >
-              <HeaderSearchInput />
+            <HeaderSearchInputArea entering={FadeIn} exiting={FadeOut}>
+              <HeaderSearchInput value={search} onChangeText={(e) => setSearch(e)} />
+              <HeaderSearchInputButton onPress={searchMovie} activeOpacity={1}>
+                <FontAwesome5 name="search" size={25} color="#fff" />
+              </HeaderSearchInputButton>
             </HeaderSearchInputArea>
           )}
-          <HeaderSearchInputButton onPress={() => setShowInput(!showInput)} activeOpacity={1}>
-            <FontAwesome5 name="search" size={25} color="#fff" />
-          </HeaderSearchInputButton>
+          {!showInput && (
+            <HeaderSearchInputButton onPress={() => setShowInput(true)} activeOpacity={1}>
+              <FontAwesome5 name="search" size={25} color="#fff" />
+            </HeaderSearchInputButton>
+          )}
         </HeaderSearch>
       </HeaderArea>
       <GenresArea>

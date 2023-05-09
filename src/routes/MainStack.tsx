@@ -2,10 +2,14 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Home } from '../pages/Home';
 import { MovieItem } from '../pages/MovieItem';
+import { Search } from '../pages/Search';
 
 export type RootStackProps = {
   Home: undefined;
   MovieItem: undefined;
+  Search: {
+    query: string;
+  };
 };
 
 const Stack = createStackNavigator<RootStackProps>();
@@ -15,6 +19,7 @@ export default () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="MovieItem" component={MovieItem} />
+      <Stack.Screen name="Search" component={Search} />
     </Stack.Navigator>
   );
 };
