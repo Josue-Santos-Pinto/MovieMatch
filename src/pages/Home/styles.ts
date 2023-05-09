@@ -1,4 +1,7 @@
 import styled from 'styled-components/native';
+import Animated from 'react-native-reanimated';
+
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(styled.TouchableOpacity``);
 
 type ButtonProp = {
   active: boolean;
@@ -29,12 +32,36 @@ export const HeaderAvatar = styled.View`
   align-items: center;
 `;
 export const HeaderSearch = styled.View`
+  width: 260px;
+  height: 60px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: row;
+  padding: 10px;
+  margin-left: 10px;
+`;
+export const HeaderSearchInputArea = Animated.createAnimatedComponent(styled.View`
+  width: 200px;
+  height: 60px;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  background-color: #6b6d6c;
+  margin-right: -30px;
+  align-items: center;
+`);
+export const HeaderSearchInput = styled.TextInput`
+  width: 150px;
+  height: 100%;
+  padding: 8px;
+`;
+export const HeaderSearchInputButton = styled.TouchableOpacity`
   width: 60px;
   height: 60px;
   border-radius: 30px;
   background-color: #6b6d6c;
   justify-content: center;
   align-items: center;
+  z-index: 99;
 `;
 export const GenresArea = styled.View`
   width: 100%;

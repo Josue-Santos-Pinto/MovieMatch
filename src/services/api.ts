@@ -15,7 +15,6 @@ export default {
     return res.data;
   },
   getGenresMoviesList: async (id: number, page: number) => {
-    console.log(id);
     let res = await axios.get(
       `${API_BASE_URL}discover/movie?api_key=${KEY}&with_genres=${id}&page=${page}&language=pt`
     );
