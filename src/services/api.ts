@@ -12,10 +12,11 @@ export default {
     );
     return res.data;
   },
-  getSearchedMovie: async (query: string, page: number) => {
+  getSearchedMovie: async (movie: string, page: number) => {
     let res = await axios.get(
-      `${SEARCH}?api_key=${KEY}&query=${query}&page=${page}&sort_by=vote_average.desc&language=pt`
+      `${SEARCH}?api_key=${KEY}&query=${movie}&page=${page}&sort_by=vote_average.desc&language=pt`
     );
+    console.log(res.data);
     return res.data;
   },
 };

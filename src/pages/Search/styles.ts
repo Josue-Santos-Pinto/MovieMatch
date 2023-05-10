@@ -79,6 +79,17 @@ export const SearchResultMovie = styled.Text`
   color: yellow;
   margin-left: 15px;
 `;
+export const ScrollToTopButton = Animated.createAnimatedComponent(styled.TouchableOpacity`
+  width: 80px;
+  height: 80px;
+  background-color: #6b6d6c;
+  justify-content: center;
+  align-items: center;
+  border-radius: 40px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+`);
 
 export const MoviesList = styled.View`
   flex: 1;

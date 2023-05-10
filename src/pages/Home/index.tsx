@@ -25,7 +25,7 @@ import { FooterList } from '../../components/FooterList';
 import { FadeIn, FadeOut } from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
 
-type ScrollProps = {
+export type ScrollProps = {
   layoutMeasurement: {
     height: number;
   };
