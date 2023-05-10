@@ -7,6 +7,7 @@ export type Movie = {
   original_language: string;
   overview: string;
   vote_average: number;
+  backdrop_path: string;
 };
 
 export type Genre = {

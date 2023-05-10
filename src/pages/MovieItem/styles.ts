@@ -7,22 +7,16 @@ export const Container = styled.View`
 export const Scroller = styled.ScrollView`
   flex: 1;
 `;
-export const HeaderArea = styled.View`
+export const BannerArea = styled.View`
   width: 100%;
-  height: 100px;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding-horizontal: 20px;
-  margin-top: 20px;
-`;
-export const HeaderAvatar = styled.View`
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
-  background-color: #fff;
+  height: 300px;
   justify-content: center;
   align-items: center;
+  background-color: red;
+`;
+export const BannerImg = styled.Image`
+  width: 100%;
+  height: 100%;
 `;
 export const HeaderSearch = styled.View`
   width: 60px;
@@ -31,4 +25,15 @@ export const HeaderSearch = styled.View`
   background-color: #6b6d6c;
   justify-content: center;
   align-items: center;
+`;
+export const TitleArea = styled.View`
+  height: 80px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-vertical: 10px;
+`;
+export const Title = styled.Text`
+  font-size: 28px;
+  color: #fff;
 `;

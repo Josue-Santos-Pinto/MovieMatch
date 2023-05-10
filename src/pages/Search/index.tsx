@@ -27,7 +27,7 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackProps } from '../../routes/MainStack';
 import { ScrollProps } from '../Home';
 export function Search() {
-  const route = useRoute<RouteProp<RootStackProps>>();
+  const route = useRoute<RouteProp<RootStackProps, 'Search'>>();
 
   const [list, setList] = useState<Movie[]>([]);
   const [page, setPage] = useState(1);

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_BASE_URL, API_GENRES, KEY, SEARCH } from '../keys';
+import { API_BASE_URL, API_GENRES, API_URL, KEY, SEARCH } from '../keys';
 
 export default {
   getGenresMovies: async () => {
@@ -17,6 +17,10 @@ export default {
       `${SEARCH}?api_key=${KEY}&query=${movie}&page=${page}&sort_by=vote_average.desc&language=pt`
     );
     console.log(res.data);
+    return res.data;
+  },
+  getMovieDetail: async (id: number) => {
+    let res = await axios.get(`${API_URL}/${id}?api_key=${KEY}&language=pt,en`);
     return res.data;
   },
 };

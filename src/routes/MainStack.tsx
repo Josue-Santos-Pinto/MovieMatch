@@ -6,7 +6,9 @@ import { Search } from '../pages/Search';
 
 export type RootStackProps = {
   Home: undefined;
-  MovieItem: undefined;
+  MovieItem: {
+    id: number;
+  };
   Search: {
     query: string;
   };

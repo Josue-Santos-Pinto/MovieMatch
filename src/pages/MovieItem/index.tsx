@@ -1,20 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Scroller, HeaderArea, HeaderAvatar, HeaderSearch } from './styles';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { useQuery } from 'react-query';
-import { Genre, Movie } from '../../models';
+import { Container, Scroller, BannerArea, BannerImg, Title, TitleArea } from './styles';
+
 import api from '../../services/api';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { RootStackProps } from '../../routes/MainStack';
+import { IMG } from '../../keys';
+import { Movie } from '../../models';
 
 export function MovieItem() {
+  const route = useRoute<RouteProp<RootStackProps, 'MovieItem'>>();
+
+  const id = route.params.id;
+
+  const [movie, setMovie] = useState<Movie | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const loadApi = async () => {
+    setLoading(true);
+    let res = await api.getMovieDetail(id);
+
+    setMovie(res);
+    setLoading(false);
+  };
+  useEffect(() => {
+    loadApi();
+  }, []);
+
+  useEffect(() => {
+    console.log(movie);
+  }, [movie]);
+
   return (
     <Container>
       <Scroller showsVerticalScrollIndicator={false}>
-        <HeaderArea>
-          <HeaderAvatar></HeaderAvatar>
-          <HeaderSearch>
-            <FontAwesome5 name="search" size={25} color="#fff" />
-          </HeaderSearch>
-        </HeaderArea>
+        {movie && (
+          <>
+            <BannerArea>
+              <BannerImg source={{ uri: `${IMG}${movie.backdrop_path}` }} resizeMode="cover" />
+            </BannerArea>
+            <TitleArea>
+              <Title>{movie.title}</Title>
+            </TitleArea>
+          </>
+        )}
       </Scroller>
     </Container>
   );
