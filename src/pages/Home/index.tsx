@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createRef } from 'react';
 import {
   Container,
   Scroller,
@@ -13,24 +13,30 @@ import {
   MoviesList,
   MovieBanner,
   HeaderSearchInputArea,
+  ScrollToTopButton,
 } from './styles';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useQuery } from 'react-query';
 import { Genre, Movie } from '../../models';
 import api from '../../services/api';
-import { FlatList, Alert } from 'react-native';
+import { FlatList, Alert, Dimensions, ScrollView } from 'react-native';
 import { ListItem } from '../../components/ListItem';
 import { FooterList } from '../../components/FooterList';
-import Animated, {
-  FadeIn,
-  FadeOut,
-  Keyframe,
-  SlideInLeft,
-  SlideInRight,
-  SlideInUp,
-  SlideOutRight,
-} from 'react-native-reanimated';
+import { FadeIn, FadeOut } from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
+
+type ScrollProps = {
+  layoutMeasurement: {
+    height: number;
+  };
+  contentOffset: {
+    y: number;
+  };
+  contentSize: {
+    height: number;
+  };
+};
+
 export function Home() {
   const [list, setList] = useState<Movie[]>([]);
   const [genresList, setGenresList] = useState<Genre[]>([]);
@@ -40,8 +46,11 @@ export function Home() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [showInput, setShowInput] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   const navigation = useNavigation();
+
+  const screenHeight = Dimensions.get('screen').height;
 
   const length = list.length;
 
@@ -77,6 +86,12 @@ export function Home() {
     } else {
       Alert.alert('Aviso', 'É necessário preencher o campo de pesquisa.');
     }
+  };
+
+  const scrollPercentage = ({ contentSize, contentOffset, layoutMeasurement }: ScrollProps) => {
+    const visibleContent = Math.ceil((screenHeight / contentSize.height) * 100);
+    const value = ((layoutMeasurement.height + contentOffset.y) / contentSize.height) * 100;
+    setScrollPosition(value < visibleContent ? 0 : value);
   };
 
   useEffect(() => {
@@ -127,16 +142,33 @@ export function Home() {
             ))}
         </Scroller>
       </GenresArea>
+
+      <ScrollToTopButton
+        onPress={() => this.flatListRef.scrollToOffset({ offset: 0, animated: true })}
+        entering={FadeIn}
+        exiting={FadeOut}
+        activeOpacity={0.8}
+        style={{ zIndex: 95, display: scrollPosition > 0 ? 'flex' : 'none' }}
+      >
+        <FontAwesome5 name="arrow-up" color="#fff" size={25} />
+      </ScrollToTopButton>
+
       <MoviesList>
-        <FlatList
-          data={list}
-          renderItem={({ item, index }) => <ListItem data={item} isLast={index === length - 1} />}
-          keyExtractor={(item) => item.id.toString()}
-          numColumns={2}
-          onEndReached={loadApi}
-          onEndReachedThreshold={0.1}
-          ListFooterComponent={<FooterList load={loading} />}
-        />
+        {list.length > 0 && (
+          <FlatList
+            data={list}
+            renderItem={({ item, index }) => <ListItem data={item} isLast={index === length - 1} />}
+            keyExtractor={(item) => item.id.toString()}
+            numColumns={2}
+            onEndReached={loadApi}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={<FooterList load={loading} />}
+            onScroll={(event) => scrollPercentage(event.nativeEvent)}
+            ref={(ref) => {
+              this.flatListRef = ref;
+            }}
+          />
+        )}
       </MoviesList>
     </Container>
   );

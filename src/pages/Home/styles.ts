@@ -1,10 +1,12 @@
 import styled from 'styled-components/native';
 import Animated from 'react-native-reanimated';
 
-const AnimatedTouchableOpacity = Animated.createAnimatedComponent(styled.TouchableOpacity``);
-
 type ButtonProp = {
   active: boolean;
+};
+
+type ButtonScrollToTop = {
+  scrollPosition: number;
 };
 
 export const Container = styled.View`
@@ -82,6 +84,17 @@ export const GenresText = styled.Text<ButtonProp>`
   font-size: 25px;
   font-weight: ${(props) => (props.active ? 'bold' : 'normal')};
 `;
+export const ScrollToTopButton = Animated.createAnimatedComponent(styled.TouchableOpacity`
+  width: 80px;
+  height: 80px;
+  background-color: #6b6d6c;
+  justify-content: center;
+  align-items: center;
+  border-radius: 40px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+`);
 export const MoviesList = styled.View`
   flex: 1;
   padding: 10px;
