@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Item, ItemImg, StarsArea, StarsText } from './styles';
 import { Movie } from '../../models';
 import { IMG } from '../../keys';
 import { useNavigation } from '@react-navigation/native';
+import api from '../../services/api';
 
 type dataProps = {
   data: Movie;
@@ -11,6 +12,7 @@ type dataProps = {
 
 export function ListItem({ data, isLast }: dataProps) {
   const navigation = useNavigation();
+
   return (
     <Item onPress={() => navigation.navigate('MovieItem', { id: data.id })} activeOpacity={0.7}>
       <ItemImg source={{ uri: `${IMG}${data.poster_path}` }} resizeMode="cover" />

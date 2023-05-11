@@ -12,7 +12,7 @@ export const BannerArea = styled.View`
   height: 300px;
   justify-content: center;
   align-items: center;
-  background-color: red;
+  background-color: rgba(255, 255, 255, 0.2);
 `;
 export const BannerImg = styled.Image`
   width: 100%;
@@ -27,7 +27,7 @@ export const HeaderSearch = styled.View`
   align-items: center;
 `;
 export const TitleArea = styled.View`
-  height: 80px;
+  height: 100px;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -36,4 +36,48 @@ export const TitleArea = styled.View`
 export const Title = styled.Text`
   font-size: 28px;
   color: #fff;
+`;
+export const DescArea = styled.View`
+  min-height: 100px;
+  width: 100%;
+  padding: 20px;
+  align-items: center;
+`;
+export const DescText = styled.Text`
+  color: #fff;
+  font-size: 20px;
+`;
+
+export const WhereWatchArea = styled.View`
+  min-height: 100px;
+  width: 100%;
+  padding: 20px;
+  align-items: center;
+`;
+export const WhereWatchText = styled.Text`
+  color: #fff;
+  font-size: 25px;
+  font-weight: bold;
+`;
+export const ProviderArea = styled.View`
+  width: 100%;
+  height: 100px;
+  margin-vertical: 20px;
+`;
+export const ProviderText = styled.Text`
+  font-size: 18px;
+  color: #fff;
+`;
+export const ProviderImgArea = styled.View`
+  width: 80px;
+  height: 80px;
+  border-radius: 50px;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ProviderImg = styled.Image`
+  width: 60px;
+  height: 60px;
 `;

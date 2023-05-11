@@ -14,3 +14,9 @@ export type Genre = {
   id: number;
   name: string;
 };
+
+export type Provider = {
+  logo_path: string;
+  provider_id: number;
+  provider_name: string;
+};

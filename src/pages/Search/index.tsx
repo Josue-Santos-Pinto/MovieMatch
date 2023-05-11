@@ -14,6 +14,8 @@ import {
   SearchResultText,
   SearchResultMovie,
   ScrollToTopButton,
+  NotFoundArea,
+  NotFoundText,
 } from './styles';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useQuery } from 'react-query';
@@ -23,7 +25,7 @@ import { FlatList, Dimensions } from 'react-native';
 import { ListItem } from '../../components/ListItem';
 import { FooterList } from '../../components/FooterList';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackProps } from '../../routes/MainStack';
 import { ScrollProps } from '../Home';
 export function Search() {
@@ -35,6 +37,8 @@ export function Search() {
   const [search, setSearch] = useState('');
   const [totalPage, setTotalPage] = useState(1);
   const [scrollPosition, setScrollPosition] = useState(0);
+
+  const navigation = useNavigation();
 
   const length = list.length;
 
@@ -86,7 +90,9 @@ export function Search() {
   return (
     <Container>
       <HeaderArea>
-        <HeaderAvatar></HeaderAvatar>
+        <HeaderAvatar onPress={() => navigation.goBack()}>
+          <FontAwesome5 name="arrow-left" size={25} color="#fff" />
+        </HeaderAvatar>
         <HeaderSearch>
           <HeaderSearchInputArea entering={FadeIn} exiting={FadeOut}>
             <HeaderSearchInput value={search} onChangeText={(e) => setSearch(e)} />
@@ -128,6 +134,11 @@ export function Search() {
               this.flatListRef = ref;
             }}
           />
+        )}
+        {!loading && list.length == 0 && (
+          <NotFoundArea>
+            <NotFoundText>Filme não encontrado</NotFoundText>
+          </NotFoundArea>
         )}
       </MoviesList>
     </Container>

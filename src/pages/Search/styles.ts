@@ -23,11 +23,10 @@ export const HeaderArea = styled.View`
   padding-horizontal: 20px;
   margin-top: 20px;
 `;
-export const HeaderAvatar = styled.View`
+export const HeaderAvatar = styled.TouchableOpacity`
   width: 60px;
   height: 60px;
   border-radius: 30px;
-  background-color: #fff;
   justify-content: center;
   align-items: center;
 `;
@@ -100,4 +99,15 @@ export const MovieBanner = styled.TouchableOpacity`
   height: 250px;
   margin-top: 10px;
   border-radius: 10px;
+`;
+export const NotFoundArea = styled.View`
+  flex: 1;
+  min-height: 300px;
+  margin-top: -200px;
+  justify-content: center;
+  align-items: center;
+`;
+export const NotFoundText = styled.Text`
+  font-size: 18px;
+  color: #fff;
 `;
