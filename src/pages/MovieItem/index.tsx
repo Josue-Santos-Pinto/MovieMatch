@@ -14,19 +14,22 @@ import {
   ProviderImg,
   ProviderImgArea,
   ProviderText,
+  BackButton,
 } from './styles';
 
 import api from '../../services/api';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackProps } from '../../routes/MainStack';
 import { IMG } from '../../keys';
 import { Movie, Provider } from '../../models';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 export function MovieItem() {
   const route = useRoute<RouteProp<RootStackProps, 'MovieItem'>>();
 
   const id = route.params.id;
+  const navigation = useNavigation();
 
   const [movie, setMovie] = useState<Movie | null>(null);
   const [flatrateProvider, setFlatrateProvider] = useState<Provider[] | null>(null);
@@ -52,8 +55,6 @@ export function MovieItem() {
     setLoading(false);
   };
 
-  console.log(movie);
-
   useEffect(() => {
     loadApi();
     getProviders();
@@ -62,6 +63,9 @@ export function MovieItem() {
   return (
     <Container>
       <Scroller showsVerticalScrollIndicator={false}>
+        <BackButton onPress={() => navigation.goBack()}>
+          <FontAwesome5Icon name="arrow-left" size={25} color="#fff" />
+        </BackButton>
         {movie && (
           <>
             <BannerArea>

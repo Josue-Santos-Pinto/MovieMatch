@@ -52,13 +52,13 @@ export function Search() {
     }
     if (page > totalPage) {
       return;
-    } else if (query && page == 1) {
+    } else {
       setLoading(true);
 
       const response = await api.getSearchedMovie(query, page);
       setList([...list, ...response.results]);
       setPage(page + 1);
-      setTotalPage(response.results.total_page);
+      setTotalPage(response.total_pages);
       setLoading(false);
     }
   };
@@ -70,7 +70,7 @@ export function Search() {
       let res = await api.getSearchedMovie(search, page);
       setQuery(search);
       setList(res.results);
-      setTotalPage(res.results.total_page);
+      setTotalPage(res.total_pages);
       setLoading(false);
     }
   };
@@ -84,8 +84,6 @@ export function Search() {
   useEffect(() => {
     loadApi();
   }, []);
-
-  console.log(list);
 
   return (
     <Container>

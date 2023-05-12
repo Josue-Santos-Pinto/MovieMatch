@@ -14,6 +14,9 @@ import {
   MovieBanner,
   HeaderSearchInputArea,
   ScrollToTopButton,
+  RandomMovieButtonText,
+  RandomMovieButton,
+  RandomMovieButtonArea,
 } from './styles';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useQuery } from 'react-query';
@@ -42,6 +45,7 @@ export function Home() {
   const [genresList, setGenresList] = useState<Genre[]>([]);
   const [currentGenre, setCurrentGenre] = useState(28);
   const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
@@ -70,6 +74,7 @@ export function Home() {
       const response = await api.getGenresMoviesList(currentGenre, page + 1);
       setList([...list, ...response.results]);
       setPage(page + 1);
+      setTotalPage(response.total_pages);
       setLoading(false);
     }
   };
@@ -92,6 +97,16 @@ export function Home() {
     const visibleContent = Math.ceil((screenHeight / contentSize.height) * 100);
     const value = ((layoutMeasurement.height + contentOffset.y) / contentSize.height) * 100;
     setScrollPosition(value < visibleContent ? 0 : value);
+  };
+
+  const getRandomMovie = async () => {
+    if (totalPage >= 499) {
+      setTotalPage(499);
+    }
+    let randomPage = Math.floor(Math.random() * totalPage);
+    let res = await api.getGenresMoviesList(currentGenre, randomPage);
+    let id = res.results[0].id;
+    navigation.navigate('MovieItem', { id });
   };
 
   useEffect(() => {
@@ -142,6 +157,11 @@ export function Home() {
             ))}
         </Scroller>
       </GenresArea>
+      <RandomMovieButtonArea>
+        <RandomMovieButton onPress={getRandomMovie}>
+          <RandomMovieButtonText>Aleatório</RandomMovieButtonText>
+        </RandomMovieButton>
+      </RandomMovieButtonArea>
 
       <ScrollToTopButton
         onPress={() => this.flatListRef.scrollToOffset({ offset: 0, animated: true })}

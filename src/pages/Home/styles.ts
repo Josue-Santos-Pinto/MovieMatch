@@ -29,9 +29,6 @@ export const HeaderAvatar = styled.View`
   width: 60px;
   height: 60px;
   border-radius: 30px;
-  background-color: #fff;
-  justify-content: center;
-  align-items: center;
 `;
 export const HeaderSearch = styled.View`
   width: 260px;
@@ -104,4 +101,21 @@ export const MovieBanner = styled.TouchableOpacity`
   height: 250px;
   margin-top: 10px;
   border-radius: 10px;
+`;
+export const RandomMovieButtonArea = styled.View`
+  height: 80px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+`;
+export const RandomMovieButton = styled.TouchableOpacity`
+  width: 100px;
+  height: 60px;
+  justify-content: center;
+  align-items: center;
+  background-color: #4764e6;
+  border-radius: 5px;
+`;
+export const RandomMovieButtonText = styled.Text`
+  color: #fff;
 `;

@@ -35,6 +35,7 @@ export const TitleArea = styled.View`
 `;
 export const Title = styled.Text`
   font-size: 28px;
+  font-weight: bold;
   color: #fff;
 `;
 export const DescArea = styled.View`
@@ -80,4 +81,14 @@ export const ProviderImgArea = styled.View`
 export const ProviderImg = styled.Image`
   width: 60px;
   height: 60px;
+`;
+export const BackButton = styled.TouchableOpacity`
+  width: 80px;
+  height: 80px;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 99;
 `;
