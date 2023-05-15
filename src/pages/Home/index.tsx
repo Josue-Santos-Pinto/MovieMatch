@@ -3,7 +3,6 @@ import {
   Container,
   Scroller,
   HeaderArea,
-  HeaderAvatar,
   HeaderSearch,
   HeaderSearchInput,
   HeaderSearchInputButton,
@@ -17,6 +16,8 @@ import {
   RandomMovieButtonText,
   RandomMovieButton,
   RandomMovieButtonArea,
+  HeaderLogo,
+  HeaderLogoText,
 } from './styles';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useQuery } from 'react-query';
@@ -101,13 +102,20 @@ export function Home() {
 
   const getRandomMovie = async () => {
     if (totalPage >= 499) {
-      setTotalPage(499);
+      let randomPage = Math.floor(Math.random() * 499);
+      let res = await api.getGenresMoviesList(currentGenre, randomPage);
+      let id = res.results[0].id;
+      navigation.navigate('MovieItem', { id });
+    } else {
+      let randomPage = Math.floor(Math.random() * totalPage);
+      console.log(randomPage);
+      let res = await api.getGenresMoviesList(currentGenre, randomPage);
+      let id = res.results[0].id;
+      navigation.navigate('MovieItem', { id });
     }
-    let randomPage = Math.floor(Math.random() * totalPage);
-    let res = await api.getGenresMoviesList(currentGenre, randomPage);
-    let id = res.results[0].id;
-    navigation.navigate('MovieItem', { id });
   };
+
+  console.log(totalPage);
 
   useEffect(() => {
     loadApi();
@@ -126,7 +134,9 @@ export function Home() {
   return (
     <Container>
       <HeaderArea>
-        <HeaderAvatar></HeaderAvatar>
+        <HeaderLogo>
+          <HeaderLogoText>MovieMatch</HeaderLogoText>
+        </HeaderLogo>
         <HeaderSearch>
           {showInput && (
             <HeaderSearchInputArea entering={FadeIn} exiting={FadeOut}>
@@ -159,7 +169,7 @@ export function Home() {
       </GenresArea>
       <RandomMovieButtonArea>
         <RandomMovieButton onPress={getRandomMovie}>
-          <RandomMovieButtonText>Aleatório</RandomMovieButtonText>
+          <RandomMovieButtonText>Random</RandomMovieButtonText>
         </RandomMovieButton>
       </RandomMovieButtonArea>
 

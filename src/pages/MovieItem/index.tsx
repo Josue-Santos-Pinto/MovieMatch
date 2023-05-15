@@ -47,10 +47,10 @@ export function MovieItem() {
   const getProviders = async () => {
     setLoading(true);
     let res = await api.getProviders(id);
-    if (res.results.PT != undefined) {
-      setFlatrateProvider(res.results.PT.flatrate);
-      setRentProvider(res.results.PT.rent);
-      setBuyProvider(res.results.PT.buy);
+    if (res.results.US != undefined) {
+      setFlatrateProvider(res.results.US.flatrate);
+      setRentProvider(res.results.US.rent);
+      setBuyProvider(res.results.US.buy);
     }
     setLoading(false);
   };
@@ -82,11 +82,11 @@ export function MovieItem() {
               )}
             </DescArea>
             <WhereWatchArea>
-              <WhereWatchText>Onde Assistir</WhereWatchText>
+              <WhereWatchText>Where Watch: </WhereWatchText>
               {!loading && flatrateProvider && (
                 <>
                   <ProviderArea>
-                    <ProviderText>Assinatura mensal</ProviderText>
+                    <ProviderText>Flat rate</ProviderText>
                     <Scroller horizontal showsHorizontalScrollIndicator={false}>
                       {flatrateProvider.map((item, index) => (
                         <ProviderImgArea key={item.provider_id}>
@@ -104,7 +104,7 @@ export function MovieItem() {
               {!loading && rentProvider && (
                 <>
                   <ProviderArea>
-                    <ProviderText>Aluguel</ProviderText>
+                    <ProviderText>Rent</ProviderText>
                     <Scroller horizontal showsHorizontalScrollIndicator={false}>
                       {rentProvider.map((item, index) => (
                         <ProviderImgArea key={item.provider_id}>
@@ -122,7 +122,7 @@ export function MovieItem() {
               {!loading && buyProvider && (
                 <>
                   <ProviderArea>
-                    <ProviderText>Compra</ProviderText>
+                    <ProviderText>Buy</ProviderText>
                     <Scroller horizontal showsHorizontalScrollIndicator={false}>
                       {buyProvider.map((item, index) => (
                         <ProviderImgArea key={item.provider_id}>
@@ -142,7 +142,7 @@ export function MovieItem() {
               buyProvider == undefined && (
                 <WhereWatchArea>
                   <WhereWatchText style={{ fontSize: 23, fontWeight: 'normal' }}>
-                    Provedor não encontrado!!
+                    Provider not found!!
                   </WhereWatchText>
                 </WhereWatchArea>
               )}

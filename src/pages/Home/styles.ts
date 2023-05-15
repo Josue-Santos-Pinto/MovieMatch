@@ -20,18 +20,23 @@ export const HeaderArea = styled.View`
   width: 100%;
   height: 100px;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   padding-horizontal: 20px;
   margin-top: 20px;
 `;
-export const HeaderAvatar = styled.View`
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
+export const HeaderLogo = styled.View`
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+`;
+export const HeaderLogoText = styled.Text`
+  color: #fff;
+  font-family: Bruno Ace;
+  font-size: 20px;
 `;
 export const HeaderSearch = styled.View`
-  width: 260px;
+  width: 200px;
   height: 60px;
   align-items: center;
   justify-content: flex-end;
@@ -40,23 +45,24 @@ export const HeaderSearch = styled.View`
   margin-left: 10px;
 `;
 export const HeaderSearchInputArea = Animated.createAnimatedComponent(styled.View`
-  width: 220px;
+  width: 160px;
   height: 60px;
   flex-direction: row;
   border-radius: 30px;
   background-color: #6b6d6c;
   align-items: center;
+  justify-content: space-around;
+  overflow: hidden;
 `);
 export const HeaderSearchInput = styled.TextInput`
-  width: 150px;
+  width: 120px;
   height: 100%;
-  margin-left: 10px;
   padding: 10px;
 `;
 export const HeaderSearchInputButton = styled.TouchableOpacity`
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
   background-color: #6b6d6c;
   justify-content: center;
   align-items: center;

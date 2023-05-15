@@ -32,6 +32,7 @@ export const TitleArea = styled.View`
   justify-content: center;
   align-items: center;
   margin-vertical: 10px;
+  padding-horizontal: 5px;
 `;
 export const Title = styled.Text`
   font-size: 28px;
