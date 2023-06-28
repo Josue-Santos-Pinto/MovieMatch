@@ -1,205 +1,82 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { FlatList, Dimensions, ActivityIndicator } from 'react-native';
+import { useQuery } from 'react-query';
+import api from '../../services/api';
+import { ListItem } from '../../components/ListItem';
+
 import {
   Container,
-  Scroller,
   HeaderArea,
-  HeaderSearch,
-  HeaderSearchInput,
-  HeaderSearchInputButton,
-  GenresArea,
-  GenresButton,
-  GenresText,
-  MoviesList,
-  MovieBanner,
-  HeaderSearchInputArea,
-  ScrollToTopButton,
-  RandomMovieButtonText,
-  RandomMovieButton,
-  RandomMovieButtonArea,
-  HeaderLogo,
   HeaderLogoText,
+  DailyMovie,
+  TrendingMoviesArea,
+  TrendingMoviesTitle,
+  TrendingMovies,
+  DailyMovieImg,
+  DailyMovieInfo,
+  DailyMovieInfoText,
 } from './styles';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { useQuery } from 'react-query';
-import { Genre, Movie } from '../../models';
-import api from '../../services/api';
-import { FlatList, Alert, Dimensions, ScrollView } from 'react-native';
-import { ListItem } from '../../components/ListItem';
-import { FooterList } from '../../components/FooterList';
-import { FadeIn, FadeOut } from 'react-native-reanimated';
-import { useNavigation } from '@react-navigation/native';
-
-export type ScrollProps = {
-  layoutMeasurement: {
-    height: number;
-  };
-  contentOffset: {
-    y: number;
-  };
-  contentSize: {
-    height: number;
-  };
-};
+import { IMG } from '../../keys';
+import { Movie } from '../../models';
 
 export function Home() {
-  const [list, setList] = useState<Movie[]>([]);
-  const [genresList, setGenresList] = useState<Genre[]>([]);
-  const [currentGenre, setCurrentGenre] = useState(28);
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  const [hasMoreData, setHasMoreData] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [search, setSearch] = useState('');
-  const [showInput, setShowInput] = useState(false);
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [randomMovieIndex, setRandomMovieIndex] = useState<number>(0);
 
-  const navigation = useNavigation();
+  const generateRandomNumbers = () => {
+    return Math.floor(Math.random() * 500);
+  };
 
-  const screenHeight = Dimensions.get('screen').height;
-
-  const length = list.length;
-
-  const { data: genresData } = useQuery('genres', async () => {
-    return await api.getGenresMovies();
+  const { data, isLoading } = useQuery('trending', async () => {
+    return await api.getTrendindMovies();
   });
 
-  const loadApi = async () => {
-    if (loading == true) {
-      return;
-    }
-    if (!hasMoreData) {
-      return;
-    } else {
-      setLoading(true);
-
-      const response = await api.getGenresMoviesList(currentGenre, page + 1);
-      setList([...list, ...response.results]);
-      setPage(page + 1);
-      setTotalPage(response.total_pages);
-      setLoading(false);
-    }
-  };
-  const getMoviesList = async (id: number) => {
-    let res = await api.getGenresMoviesList(id, page);
-    setList(res.results);
-    setCurrentGenre(id);
-  };
-
-  const searchMovie = () => {
-    if (search.trim() != '') {
-      navigation.navigate('Search', { query: search });
-      setSearch('');
-    } else {
-      Alert.alert('Aviso', 'É necessário preencher o campo de pesquisa.');
-    }
-  };
-
-  const scrollPercentage = ({ contentSize, contentOffset, layoutMeasurement }: ScrollProps) => {
-    const visibleContent = Math.ceil((screenHeight / contentSize.height) * 100);
-    const value = ((layoutMeasurement.height + contentOffset.y) / contentSize.height) * 100;
-    setScrollPosition(value < visibleContent ? 0 : value);
-  };
-
-  const getRandomMovie = async () => {
-    if (totalPage >= 499) {
-      let randomPage = Math.floor(Math.random() * 499);
-      let res = await api.getGenresMoviesList(currentGenre, randomPage);
-      let id = res.results[0].id;
-      navigation.navigate('MovieItem', { id });
-    } else {
-      let randomPage = Math.floor(Math.random() * totalPage);
-      console.log(randomPage);
-      let res = await api.getGenresMoviesList(currentGenre, randomPage);
-      let id = res.results[0].id;
-      navigation.navigate('MovieItem', { id });
-    }
-  };
-
-  console.log(totalPage);
+  const { data: randomMovie } = useQuery<Movie[]>('randomMovie', async () => {
+    return await api.getRandomMovie(generateRandomNumbers());
+  });
 
   useEffect(() => {
-    loadApi();
+    randomMovie
+      ? setRandomMovieIndex(Math.floor(Math.random() * randomMovie?.length))
+      : setRandomMovieIndex(Math.floor(Math.random() * 20));
   }, []);
 
-  useEffect(() => {
-    if (genresData) {
-      setGenresList(genresData.genres);
-    }
-  }, [genresData]);
+  if (isLoading) {
+    return <ActivityIndicator size="large" color="white" />;
+  }
 
-  useEffect(() => {
-    if (page < 500) setHasMoreData(true);
-  }, [page]);
+  console.log(randomMovieIndex);
 
   return (
     <Container>
       <HeaderArea>
-        <HeaderLogo>
-          <HeaderLogoText>MovieMatch</HeaderLogoText>
-        </HeaderLogo>
-        <HeaderSearch>
-          {showInput && (
-            <HeaderSearchInputArea entering={FadeIn} exiting={FadeOut}>
-              <HeaderSearchInput value={search} onChangeText={(e) => setSearch(e)} />
-              <HeaderSearchInputButton onPress={searchMovie} activeOpacity={1}>
-                <FontAwesome5 name="search" size={25} color="#fff" />
-              </HeaderSearchInputButton>
-            </HeaderSearchInputArea>
-          )}
-          {!showInput && (
-            <HeaderSearchInputButton onPress={() => setShowInput(true)} activeOpacity={1}>
-              <FontAwesome5 name="search" size={25} color="#fff" />
-            </HeaderSearchInputButton>
-          )}
-        </HeaderSearch>
+        <HeaderLogoText>MovieMatch</HeaderLogoText>
       </HeaderArea>
-      <GenresArea>
-        <Scroller horizontal showsHorizontalScrollIndicator={false}>
-          {genresList != undefined &&
-            genresList.map((item, index) => (
-              <GenresButton
-                key={item.id}
-                onPress={() => getMoviesList(item.id)}
-                active={item.id === currentGenre}
-              >
-                <GenresText active={item.id === currentGenre}>{item.name}</GenresText>
-              </GenresButton>
-            ))}
-        </Scroller>
-      </GenresArea>
-      <RandomMovieButtonArea>
-        <RandomMovieButton onPress={getRandomMovie}>
-          <RandomMovieButtonText>Random</RandomMovieButtonText>
-        </RandomMovieButton>
-      </RandomMovieButtonArea>
-
-      <ScrollToTopButton
-        onPress={() => this.flatListRef.scrollToOffset({ offset: 0, animated: true })}
-        entering={FadeIn}
-        exiting={FadeOut}
-        activeOpacity={0.8}
-        style={{ zIndex: 95, display: scrollPosition > 0 ? 'flex' : 'none' }}
-      >
-        <FontAwesome5 name="arrow-up" color="#fff" size={25} />
-      </ScrollToTopButton>
-
-      <MoviesList>
-        {list.length > 0 && (
-          <FlatList
-            data={list}
-            renderItem={({ item, index }) => <ListItem data={item} isLast={index === length - 1} />}
-            keyExtractor={(item) => item.id.toString()}
-            numColumns={2}
-            onEndReached={loadApi}
-            onEndReachedThreshold={0.1}
-            ListFooterComponent={<FooterList load={loading} />}
-            onScroll={(event) => scrollPercentage(event.nativeEvent)}
-            ref={(ref) => {
-              this.flatListRef = ref;
-            }}
+      {randomMovie && (
+        <DailyMovie>
+          <DailyMovieImg
+            source={{ uri: `${IMG}${randomMovie[randomMovieIndex].backdrop_path}` }}
+            resizeMode="cover"
           />
-        )}
-      </MoviesList>
+          <DailyMovieInfo>
+            <DailyMovieInfoText>Sugestão de filme: </DailyMovieInfoText>
+            <DailyMovieInfoText>{randomMovie[randomMovieIndex].title}</DailyMovieInfoText>
+          </DailyMovieInfo>
+        </DailyMovie>
+      )}
+      <TrendingMoviesArea>
+        <TrendingMoviesTitle>Filmes em Alta</TrendingMoviesTitle>
+        <TrendingMovies>
+          {data.results && data.results.length > 0 && (
+            <FlatList
+              data={data.results}
+              renderItem={({ item, index }) => <ListItem data={item} />}
+              keyExtractor={(item) => item.id.toString()}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          )}
+        </TrendingMovies>
+      </TrendingMoviesArea>
     </Container>
   );
 }

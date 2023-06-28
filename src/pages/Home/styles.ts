@@ -11,117 +11,74 @@ type ButtonScrollToTop = {
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #0a0a0a;
+  background-color: #15141f;
+  padding-horizontal: 10px;
 `;
 export const Scroller = styled.ScrollView`
   flex: 1;
 `;
 export const HeaderArea = styled.View`
   width: 100%;
-  height: 100px;
+  height: 50px;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
   padding-horizontal: 20px;
   margin-top: 20px;
 `;
-export const HeaderLogo = styled.View`
-  height: 40px;
-  justify-content: center;
-  align-items: center;
-`;
+
 export const HeaderLogoText = styled.Text`
-  color: #fff;
-  font-family: Bruno Ace;
-  font-size: 20px;
-`;
-export const HeaderSearch = styled.View`
-  width: 200px;
-  height: 60px;
-  align-items: center;
-  justify-content: flex-end;
-  flex-direction: row;
-  padding: 10px;
-  margin-left: 10px;
-`;
-export const HeaderSearchInputArea = Animated.createAnimatedComponent(styled.View`
-  width: 160px;
-  height: 60px;
-  flex-direction: row;
-  border-radius: 30px;
-  background-color: #6b6d6c;
-  align-items: center;
-  justify-content: space-around;
-  overflow: hidden;
-`);
-export const HeaderSearchInput = styled.TextInput`
-  width: 120px;
-  height: 100%;
-  padding: 10px;
-`;
-export const HeaderSearchInputButton = styled.TouchableOpacity`
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-  background-color: #6b6d6c;
-  justify-content: center;
-  align-items: center;
-`;
-export const GenresArea = styled.View`
-  width: 100%;
-  height: 70px;
-  flex-direction: row;
-  align-items: center;
-  padding-horizontal: 20px;
-  margin-vertical: 20px;
-`;
-export const GenresButton = styled.TouchableOpacity<ButtonProp>`
-  padding: 8px;
-  margin-horizontal: 8px;
-  border-bottom-width: 2px;
-  border-bottom-color: ${(props) => (props.active ? '#fff' : '#ccc')};
-  height: 60px;
-`;
-export const GenresText = styled.Text<ButtonProp>`
-  color: ${(props) => (props.active ? '#fff' : '#ddd')};
+  color: #ff8f70;
+  font-family: Lato-Italic;
   font-size: 25px;
-  font-weight: ${(props) => (props.active ? 'bold' : 'normal')};
 `;
-export const ScrollToTopButton = Animated.createAnimatedComponent(styled.TouchableOpacity`
-  width: 80px;
-  height: 80px;
-  background-color: #6b6d6c;
-  justify-content: center;
-  align-items: center;
-  border-radius: 40px;
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-`);
-export const MoviesList = styled.View`
-  flex: 1;
-  padding: 10px;
+
+export const DailyMovie = styled.View`
+  width: 90%;
+  height: 200px;
+  border-radius: 30px;
+  margin: 15px auto;
+  overflow: hidden;
 `;
-export const MovieBanner = styled.TouchableOpacity`
-  width: 140px;
-  height: 250px;
-  margin-top: 10px;
-  border-radius: 10px;
-`;
-export const RandomMovieButtonArea = styled.View`
-  height: 80px;
+export const DailyMovieImg = styled.Image`
   width: 100%;
-  justify-content: center;
-  align-items: center;
+  height: 100%;
 `;
-export const RandomMovieButton = styled.TouchableOpacity`
-  width: 100px;
+export const DailyMovieInfo = styled.View`
+  position: absolute;
+  bottom: 5px;
+  left: 10px;
+  min-width: 200px;
+  max-width: 90%;
   height: 60px;
   justify-content: center;
   align-items: center;
-  background-color: #4764e6;
-  border-radius: 5px;
+  padding: 10px;
+  /* From https://css.glass */
+  background: rgba(0, 0, 0, 0.39);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4.8px);
+  -webkit-backdrop-filter: blur(4.8px);
+  border: 1px solid rgba(255, 255, 255, 0.23);
 `;
-export const RandomMovieButtonText = styled.Text`
+export const DailyMovieInfoText = styled.Text`
   color: #fff;
+  font-weight: bold;
+`;
+export const TrendingMoviesArea = styled.View`
+  flex: 1;
+`;
+export const TrendingMoviesTitle = styled.Text`
+  font-size: 20px;
+  color: white;
+  margin-bottom: 10px;
+`;
+export const TrendingMovies = styled.View`
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;

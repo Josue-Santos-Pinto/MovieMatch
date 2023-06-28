@@ -1,7 +1,11 @@
 import axios from 'axios';
-import { API_BASE_URL, API_GENRES, API_URL, KEY, SEARCH } from '../keys';
+import { API_BASE_URL, API_GENRES, KEY, SEARCH } from '../keys';
 
 export default {
+  getTrendindMovies: async () => {
+    let res = await axios.get(`${API_BASE_URL}/movie/popular?api_key=${KEY}&language=pt`);
+    return res.data;
+  },
   getGenresMovies: async () => {
     let res = await axios.get(`${API_GENRES}?api_key=${KEY}&language=en`);
     return res.data;
@@ -19,11 +23,23 @@ export default {
     return res.data;
   },
   getMovieDetail: async (id: number) => {
-    let res = await axios.get(`${API_URL}/${id}?api_key=${KEY}&language=en`);
+    let res = await axios.get(`${API_BASE_URL}/movie/${id}?api_key=${KEY}&language=pt`);
     return res.data;
   },
+  getMovieImage: async (id: number) => {
+    let res = await axios.get(`${API_BASE_URL}/movie/${id}/images?api_key=${KEY}&language=pt`);
+    return res.data;
+  },
+  getRandomMovie: async (page: number) => {
+    let res = await axios.get(
+      `${API_BASE_URL}/discover/movie?api_key=${KEY}&sort_by=popularity.desc&page=${page}&language=pt`
+    );
+    return res.data.results;
+  },
   getProviders: async (id: number) => {
-    let res = await axios.get(`${API_URL}/${id}/watch/providers?api_key=${KEY}&language=en`);
+    let res = await axios.get(
+      `${API_BASE_URL}/movie/${id}/watch/providers?api_key=${KEY}&language=en`
+    );
     return res.data;
   },
 };

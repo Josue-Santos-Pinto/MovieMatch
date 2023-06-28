@@ -1,14 +1,13 @@
 import styled from 'styled-components/native';
 
 export const Item = styled.TouchableOpacity`
-  width: 45%;
-  height: 240px;
-  border-radius: 5px;
+  width: 250px;
+  height: 350px;
+  border-radius: 30px;
   margin: 10px;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border: 0.5px solid #ccc;
 `;
 
 export const ItemImg = styled.Image`
@@ -18,12 +17,22 @@ export const ItemImg = styled.Image`
 
 export const StarsArea = styled.View`
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 10px;
+  right: 15px;
   padding: 8px;
   border-radius: 5px;
-  background-color: rgba(0, 0, 0, 0.5);
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  /* From https://css.glass */
+  background: rgba(0, 0, 0, 0.31);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4.2px);
+  -webkit-backdrop-filter: blur(4.2px);
+  border: 1px solid rgba(0, 0, 0, 0.3);
 `;
 export const StarsText = styled.Text`
   color: #fff;
+  margin-left: 8px;
 `;
