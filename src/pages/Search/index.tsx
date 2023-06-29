@@ -3,141 +3,122 @@ import {
   Container,
   Scroller,
   HeaderArea,
-  HeaderAvatar,
-  HeaderSearch,
-  HeaderSearchInput,
-  HeaderSearchInputButton,
   MoviesList,
-  MovieBanner,
-  HeaderSearchInputArea,
-  SearchResultArea,
-  SearchResultText,
-  SearchResultMovie,
-  ScrollToTopButton,
   NotFoundArea,
   NotFoundText,
+  HeaderTitle,
+  SearchArea,
+  SearchInput,
+  ItemArea,
+  ItemName,
+  ItemBar,
+  FilterArea,
 } from './styles';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { useQuery } from 'react-query';
-import { Genre, Movie } from '../../models';
-import api from '../../services/api';
-import { FlatList, Dimensions } from 'react-native';
-import { ListItem } from '../../components/ListItem';
-import { FooterList } from '../../components/FooterList';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { RootStackProps } from '../../routes/MainStack';
-import { ScrollProps } from '../Home';
-export function Search() {
-  const route = useRoute<RouteProp<RootStackProps, 'Search'>>();
 
+import { Movie } from '../../models';
+import { FlatList } from 'react-native';
+import { ListItem } from '../../components/ListItem';
+import { Loading } from '../../components/Loading';
+import { useNavigation } from '@react-navigation/native';
+import { useQuery } from 'react-query';
+import api from '../../services/api';
+import { SearchListItem } from '../../components/SearchListItem';
+import { Pagination } from '../../components/Pagination';
+export function Search() {
   const [list, setList] = useState<Movie[]>([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(2);
   const [loading, setLoading] = useState(false);
-  const [search, setSearch] = useState('');
-  const [totalPage, setTotalPage] = useState(1);
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [currentItem, setCurrentItem] = useState('Filmes');
 
   const navigation = useNavigation();
 
   const length = list.length;
 
-  const screenHeight = Dimensions.get('screen').height;
+  const findItemList = ['Filmes', 'Series', 'Documentários'];
 
-  const [query, setQuery] = useState(route.params?.query);
+  const { data: average, isLoading } = useQuery(['average', page], async () => {
+    return await api.getFindMovies(page);
+  });
 
-  const loadApi = async () => {
-    if (loading == true) {
-      return;
-    }
-    if (page > totalPage) {
-      return;
-    } else {
-      setLoading(true);
+  const { data: series } = useQuery(['series', page], async () => {
+    return await api.getTvSeries(page);
+  });
 
-      const response = await api.getSearchedMovie(query, page);
-      setList([...list, ...response.results]);
-      setPage(page + 1);
-      setTotalPage(response.total_pages);
-      setLoading(false);
-    }
+  const { data: documentary } = useQuery(['documentary', page], async () => {
+    return await api.getDocumentaryMovies(page);
+  });
+
+  const changeCurrentFilterAndPage = (item: string) => {
+    setCurrentItem(item);
+    setPage(1);
   };
-
-  const searchNewMovie = async () => {
-    if (search != '') {
-      setLoading(true);
-      setPage(1);
-      let res = await api.getSearchedMovie(search, page);
-      setQuery(search);
-      setList(res.results);
-      setTotalPage(res.total_pages);
-      setLoading(false);
-    }
-  };
-
-  const scrollPercentage = ({ contentSize, contentOffset, layoutMeasurement }: ScrollProps) => {
-    const visibleContent = Math.ceil((screenHeight / contentSize.height) * 100);
-    const value = ((layoutMeasurement.height + contentOffset.y) / contentSize.height) * 100;
-    setScrollPosition(value < visibleContent ? 0 : value);
-  };
-
-  useEffect(() => {
-    loadApi();
-  }, []);
 
   return (
     <Container>
       <HeaderArea>
-        <HeaderAvatar onPress={() => navigation.goBack()}>
-          <FontAwesome5 name="arrow-left" size={25} color="#fff" />
-        </HeaderAvatar>
-        <HeaderSearch>
-          <HeaderSearchInputArea entering={FadeIn} exiting={FadeOut}>
-            <HeaderSearchInput value={search} onChangeText={(e) => setSearch(e)} />
-            <HeaderSearchInputButton onPress={searchNewMovie} activeOpacity={0.8}>
-              <FontAwesome5 name="search" size={25} color="#fff" />
-            </HeaderSearchInputButton>
-          </HeaderSearchInputArea>
-        </HeaderSearch>
+        <HeaderTitle>Encontre filmes, series {'\n'}e mais...</HeaderTitle>
       </HeaderArea>
 
-      <SearchResultArea>
-        <SearchResultText>Resultados para: </SearchResultText>
+      <SearchArea>
+        <FontAwesome5 name="search" size={22} color="#fff" style={{ marginLeft: 8 }} />
+        <SearchInput placeholder="Sherlock Holmes" placeholderTextColor="#BBBBBB" />
+      </SearchArea>
 
-        <SearchResultMovie>{query}</SearchResultMovie>
-      </SearchResultArea>
-
-      <ScrollToTopButton
-        onPress={() => this.flatListRef.scrollToOffset({ offset: 0, animated: true })}
-        entering={FadeIn}
-        exiting={FadeOut}
-        activeOpacity={0.8}
-        style={{ zIndex: 95, display: scrollPosition > 0 ? 'flex' : 'none' }}
-      >
-        <FontAwesome5 name="arrow-up" color="#fff" size={25} />
-      </ScrollToTopButton>
+      <FilterArea>
+        {findItemList.map((item, index) => (
+          <ItemArea key={index} onPress={() => changeCurrentFilterAndPage(item)}>
+            <ItemName isActive={item === currentItem}>{item}</ItemName>
+            {item === currentItem && <ItemBar />}
+          </ItemArea>
+        ))}
+      </FilterArea>
 
       <MoviesList>
-        {list && (
+        {currentItem === 'Filmes' && average && average.results && (
           <FlatList
-            data={list}
-            renderItem={({ item, index }) => <ListItem data={item} isLast={index === length - 1} />}
+            data={average.results}
+            renderItem={({ item, index }) => (
+              <SearchListItem data={item} isLast={index === length - 1} />
+            )}
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
-            onEndReached={loadApi}
-            onEndReachedThreshold={0.1}
-            ListFooterComponent={<FooterList load={loading} />}
-            onScroll={(event) => scrollPercentage(event.nativeEvent)}
-            ref={(ref) => {
-              this.flatListRef = ref;
-            }}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={<Pagination page={page} setPage={setPage} />}
           />
         )}
-        {!loading && list.length == 0 && (
+        {currentItem === 'Series' && series && series.results && (
+          <FlatList
+            data={series.results}
+            renderItem={({ item, index }) => (
+              <SearchListItem data={item} isLast={index === length - 1} />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={<Pagination page={page} setPage={setPage} />}
+          />
+        )}
+        {currentItem === 'Documentários' && documentary && documentary.results && (
+          <FlatList
+            data={documentary.results}
+            renderItem={({ item, index }) => (
+              <SearchListItem data={item} isLast={index === length - 1} />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={<Pagination page={page} setPage={setPage} />}
+          />
+        )}
+
+        {isLoading && <Loading load={isLoading} />}
+
+        {/*{!loading && list.length == 0 && (
           <NotFoundArea>
             <NotFoundText>Filme não encontrado</NotFoundText>
           </NotFoundArea>
-        )}
+        )}*/}
       </MoviesList>
     </Container>
   );

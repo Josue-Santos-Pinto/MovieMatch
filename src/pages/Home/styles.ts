@@ -1,13 +1,4 @@
 import styled from 'styled-components/native';
-import Animated from 'react-native-reanimated';
-
-type ButtonProp = {
-  active: boolean;
-};
-
-type ButtonScrollToTop = {
-  scrollPosition: number;
-};
 
 export const Container = styled.View`
   flex: 1;

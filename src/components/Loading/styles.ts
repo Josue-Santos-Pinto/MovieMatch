@@ -7,6 +7,4 @@ export const LoadingArea = styled.View`
   align-items: center;
 `;
 
-export const Loading = styled.ActivityIndicator`
-  w
-`;
+export const Load = styled.ActivityIndicator``;

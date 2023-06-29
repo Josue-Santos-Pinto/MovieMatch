@@ -15,11 +15,11 @@ export type RootTabProps = {
   };
 };
 
-const Stack = createBottomTabNavigator<RootTabProps>();
+const Tab = createBottomTabNavigator<RootTabProps>();
 
 export default () => {
   return (
-    <Stack.Navigator
+    <Tab.Navigator
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
@@ -33,7 +33,7 @@ export default () => {
         tabBarLabelStyle: { display: 'none' },
       }}
     >
-      <Stack.Screen
+      <Tab.Screen
         name="Home"
         component={Home}
         options={{
@@ -42,24 +42,24 @@ export default () => {
           },
         }}
       />
-      <Stack.Screen
-        name="MovieItem"
-        component={MovieItem}
+      <Tab.Screen
+        name="Search"
+        component={Search}
         options={{
           tabBarIcon: ({ color, focused }) => {
             return <Icon name="play-circle" size={25} color={focused ? '#ff8f70' : '#ccc'} />;
           },
         }}
       />
-      <Stack.Screen
-        name="Search"
-        component={Search}
+      <Tab.Screen
+        name="MovieItem"
+        component={MovieItem}
         options={{
           tabBarIcon: ({ color, focused }) => {
             return <Icon name="user" size={25} color={focused ? '#ff8f70' : '#ccc'} />;
           },
         }}
       />
-    </Stack.Navigator>
+    </Tab.Navigator>
   );
 };
