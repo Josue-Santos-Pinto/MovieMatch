@@ -57,7 +57,13 @@ export function Home() {
           activeOpacity={0.7}
         >
           <DailyMovieImg
-            source={{ uri: `${IMG}${randomMovie[randomMovieIndex].backdrop_path}` }}
+            source={{
+              uri: `${
+                randomMovie[randomMovieIndex].backdrop_path
+                  ? IMG + randomMovie[randomMovieIndex].backdrop_path
+                  : 'https://firebasestorage.googleapis.com/v0/b/guitarstore-a2356.appspot.com/o/image-coming-soon-placeholder.png?alt=media&token=a192c2bb-1477-4350-944d-777cd225a33d'
+              }`,
+            }}
             resizeMode="cover"
           />
           <DailyMovieInfo>

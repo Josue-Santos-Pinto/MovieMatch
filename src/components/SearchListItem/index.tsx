@@ -16,7 +16,16 @@ export function SearchListItem({ data, isLast }: dataProps) {
 
   return (
     <Item onPress={() => navigation.navigate('MovieItem', { id: data.id })} activeOpacity={0.7}>
-      <ItemImg source={{ uri: `${IMG}${data.poster_path}` }} resizeMode="contain" />
+      <ItemImg
+        source={{
+          uri: `${
+            data.poster_path
+              ? IMG + data.poster_path
+              : 'https://firebasestorage.googleapis.com/v0/b/guitarstore-a2356.appspot.com/o/image-coming-soon-placeholder.png?alt=media&token=a192c2bb-1477-4350-944d-777cd225a33d'
+          }`,
+        }}
+        resizeMode="contain"
+      />
       <StarsArea>
         <Icon name="star" size={25} color="#f7d22e" />
         <StarsText>{`${data.vote_average.toFixed(1)}`}</StarsText>

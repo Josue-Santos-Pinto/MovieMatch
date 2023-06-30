@@ -100,7 +100,7 @@ export const GenreList = styled.View`
   flex-wrap: wrap;
 `;
 export const GenreButton = styled.View`
-  width: 60px;
+  min-width: 60px;
   height: 25px;
   border-radius: 20px;
   background-color: #201f27;
@@ -108,6 +108,8 @@ export const GenreButton = styled.View`
   justify-content: center;
   align-items: center;
   margin-top: 10px;
+  margin-right: 10px;
+  padding-horizontal: 8px;
 `;
 export const GenreButtonText = styled.Text`
   font-size: 12px;

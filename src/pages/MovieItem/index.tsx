@@ -45,6 +45,7 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome';
 import { RootTabProps } from '../../routes/MainTab';
 import { useQuery } from 'react-query';
 import { ListItem } from '../../components/ListItem';
+import { Loading } from '../../components/Loading';
 
 export function MovieItem() {
   const route = useRoute<RouteProp<RootTabProps, 'MovieItem'>>();
@@ -52,45 +53,28 @@ export function MovieItem() {
   const id = route.params.id;
   const navigation = useNavigation();
 
-  const [movie, setMovie] = useState<Movie | null>(null);
-  const [formatedDate, setFormatedDate] = useState('');
   const [flatrateProvider, setFlatrateProvider] = useState<Provider[] | null>(null);
   const [rentProvider, setRentProvider] = useState<Provider[] | null>(null);
   const [buyProvider, setBuyProvider] = useState<Provider[] | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const { data: movieDetail } = useQuery<Movie>(['movieDetail', id], async () => {
+  const { data: movieDetail, isLoading } = useQuery<Movie>(['movieDetail', id], async () => {
     return await api.getMovieDetail(id);
   });
 
   const { data: relatedMovie } = useQuery(['relatedMovie', id], async () => {
     return await api.getRelatedMovie(id);
   });
-  console.log(movieDetail);
 
-  const getProviders = async () => {
-    setLoading(true);
-    let res = await api.getProviders(id);
-    if (res.results.US != undefined) {
-      setFlatrateProvider(res.results.US.flatrate);
-      setRentProvider(res.results.US.rent);
-      setBuyProvider(res.results.US.buy);
-    }
-    setLoading(false);
-  };
+  if (isLoading) return <Loading load={isLoading} />;
 
   const formatDate = (data: string) => {
     const date = new Date(data);
     let day = date.getDate();
     let month = date.toLocaleString('pt-BR', { month: 'long' });
     let year = date.getFullYear();
-    setFormatedDate(`${day} de ${month}, ${year}`);
+    return `${day} de ${month}, ${year}`;
   };
-
-  useEffect(() => {
-    getProviders();
-    if (movieDetail) formatDate(movieDetail.release_date);
-  }, [id]);
 
   return (
     <Container>
@@ -137,18 +121,22 @@ export function MovieItem() {
                   paddingVertical: 15,
                 }}
               >
-                <ReleaseArea>
-                  <ReleaseTitle>Data de lançamento</ReleaseTitle>
-                  <ReleaseDate>{formatedDate}</ReleaseDate>
-                </ReleaseArea>
+                {movieDetail.release_date && (
+                  <ReleaseArea>
+                    <ReleaseTitle>Data de lançamento</ReleaseTitle>
+                    <ReleaseDate>{formatDate(movieDetail.release_date)}</ReleaseDate>
+                  </ReleaseArea>
+                )}
+
                 <GenresArea>
                   <GenresTitle>Gêneros</GenresTitle>
                   <GenreList>
-                    {movieDetail.genres.map((item, index) => (
-                      <GenreButton key={index}>
-                        <GenreButtonText>{item.name}</GenreButtonText>
-                      </GenreButton>
-                    ))}
+                    {movieDetail.genres &&
+                      movieDetail.genres.map((item, index) => (
+                        <GenreButton key={index}>
+                          <GenreButtonText>{item.name}</GenreButtonText>
+                        </GenreButton>
+                      ))}
                   </GenreList>
                 </GenresArea>
               </HeaderInfoArea>
@@ -161,87 +149,23 @@ export function MovieItem() {
                 )}
               </DescArea>
 
-              <RelatedMoviesArea>
-                <RelatedMoviesTitle>Filmes Relacionados: </RelatedMoviesTitle>
-                <RelatedMovies>
-                  {relatedMovie && relatedMovie.results && relatedMovie.results.length > 0 && (
-                    <FlatList
-                      data={relatedMovie.results}
-                      renderItem={({ item, index }) => <ListItem data={item} size="small" />}
-                      keyExtractor={(item) => item.id.toString()}
-                      horizontal
-                      showsHorizontalScrollIndicator={false}
-                    />
-                  )}
-                </RelatedMovies>
-              </RelatedMoviesArea>
+              {relatedMovie && (
+                <RelatedMoviesArea>
+                  <RelatedMoviesTitle>Filmes Relacionados: </RelatedMoviesTitle>
+                  <RelatedMovies>
+                    {relatedMovie && relatedMovie.results && relatedMovie.results.length > 0 && (
+                      <FlatList
+                        data={relatedMovie.results}
+                        renderItem={({ item, index }) => <ListItem data={item} size="small" />}
+                        keyExtractor={(item) => item.id.toString()}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                      />
+                    )}
+                  </RelatedMovies>
+                </RelatedMoviesArea>
+              )}
             </MovieInfo>
-
-            <WhereWatchArea>
-              <WhereWatchText>Onde assistir: </WhereWatchText>
-              {!loading && flatrateProvider && (
-                <>
-                  <ProviderArea>
-                    <ProviderText>Flat rate</ProviderText>
-                    <Scroller horizontal showsHorizontalScrollIndicator={false}>
-                      {flatrateProvider.map((item, index) => (
-                        <ProviderImgArea key={item.provider_id}>
-                          <ProviderImg
-                            source={{ uri: `${IMG}${item.logo_path}` }}
-                            resizeMode="contain"
-                          />
-                        </ProviderImgArea>
-                      ))}
-                    </Scroller>
-                  </ProviderArea>
-                </>
-              )}
-
-              {!loading && rentProvider && (
-                <>
-                  <ProviderArea>
-                    <ProviderText>Rent</ProviderText>
-                    <Scroller horizontal showsHorizontalScrollIndicator={false}>
-                      {rentProvider.map((item, index) => (
-                        <ProviderImgArea key={item.provider_id}>
-                          <ProviderImg
-                            source={{ uri: `${IMG}${item.logo_path}` }}
-                            resizeMode="contain"
-                          />
-                        </ProviderImgArea>
-                      ))}
-                    </Scroller>
-                  </ProviderArea>
-                </>
-              )}
-
-              {!loading && buyProvider && (
-                <>
-                  <ProviderArea>
-                    <ProviderText>Buy</ProviderText>
-                    <Scroller horizontal showsHorizontalScrollIndicator={false}>
-                      {buyProvider.map((item, index) => (
-                        <ProviderImgArea key={item.provider_id}>
-                          <ProviderImg
-                            source={{ uri: `${IMG}${item.logo_path}` }}
-                            resizeMode="contain"
-                          />
-                        </ProviderImgArea>
-                      ))}
-                    </Scroller>
-                  </ProviderArea>
-                </>
-              )}
-            </WhereWatchArea>
-            {flatrateProvider == undefined &&
-              rentProvider == undefined &&
-              buyProvider == undefined && (
-                <WhereWatchArea>
-                  <WhereWatchText style={{ fontSize: 23, fontWeight: 'normal' }}>
-                    Provider not found!!
-                  </WhereWatchText>
-                </WhereWatchArea>
-              )}
           </>
         )}
       </Scroller>
