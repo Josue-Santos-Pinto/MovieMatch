@@ -18,8 +18,10 @@ import {
 } from './styles';
 import { IMG } from '../../keys';
 import { Movie } from '../../models';
+import { useNavigation } from '@react-navigation/native';
 
 export function Home() {
+  const navigation = useNavigation();
   const [randomMovieIndex, setRandomMovieIndex] = useState<number>(0);
 
   const generateRandomNumbers = () => {
@@ -44,15 +46,16 @@ export function Home() {
     return <ActivityIndicator size="large" color="white" />;
   }
 
-  console.log(randomMovieIndex);
-
   return (
     <Container>
       <HeaderArea>
         <HeaderLogoText>MovieMatch</HeaderLogoText>
       </HeaderArea>
       {randomMovie && (
-        <DailyMovie>
+        <DailyMovie
+          onPress={() => navigation.navigate('MovieItem', { id: randomMovie[randomMovieIndex].id })}
+          activeOpacity={0.7}
+        >
           <DailyMovieImg
             source={{ uri: `${IMG}${randomMovie[randomMovieIndex].backdrop_path}` }}
             resizeMode="cover"

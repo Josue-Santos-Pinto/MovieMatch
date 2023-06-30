@@ -4,14 +4,16 @@ import { Home } from '../pages/Home';
 import { MovieItem } from '../pages/MovieItem';
 import { Search } from '../pages/Search';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Perfil } from '../pages/Perfil';
 
 export type RootTabProps = {
   Home: undefined;
-  MovieItem: {
-    id: number;
-  };
   Search: {
     query: string;
+  };
+  Perfil: undefined;
+  MovieItem: {
+    id: number;
   };
 };
 
@@ -52,14 +54,15 @@ export default () => {
         }}
       />
       <Tab.Screen
-        name="MovieItem"
-        component={MovieItem}
+        name="Perfil"
+        component={Perfil}
         options={{
           tabBarIcon: ({ color, focused }) => {
             return <Icon name="user" size={25} color={focused ? '#ff8f70' : '#ccc'} />;
           },
         }}
       />
+      <Tab.Screen name="MovieItem" component={MovieItem} options={{ tabBarButton: () => null }} />
     </Tab.Navigator>
   );
 };

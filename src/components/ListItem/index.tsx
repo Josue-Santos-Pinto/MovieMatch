@@ -8,14 +8,17 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 type dataProps = {
   data: Movie;
-  isLast?: boolean;
+  size?: string;
 };
 
-export function ListItem({ data, isLast }: dataProps) {
+export function ListItem({ data, size }: dataProps) {
   const navigation = useNavigation();
-
   return (
-    <Item onPress={() => navigation.navigate('MovieItem', { id: data.id })} activeOpacity={0.7}>
+    <Item
+      onPress={() => navigation.navigate('MovieItem', { id: data.id })}
+      activeOpacity={0.7}
+      size={size}
+    >
       <ItemImg source={{ uri: `${IMG}${data.poster_path}` }} resizeMode="cover" />
       <StarsArea>
         <Icon name="star" size={25} color="#f7d22e" />

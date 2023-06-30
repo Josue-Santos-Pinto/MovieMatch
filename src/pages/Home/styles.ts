@@ -24,7 +24,7 @@ export const HeaderLogoText = styled.Text`
   font-size: 25px;
 `;
 
-export const DailyMovie = styled.View`
+export const DailyMovie = styled.TouchableOpacity`
   width: 90%;
   height: 200px;
   border-radius: 30px;

@@ -1,8 +1,12 @@
 import styled from 'styled-components/native';
 
-export const Item = styled.TouchableOpacity`
-  width: 250px;
-  height: 350px;
+type Props = {
+  size?: string;
+};
+
+export const Item = styled.TouchableOpacity<Props>`
+  width: ${(props) => (props.size ? '150px' : '250px')};
+  height: ${(props) => (props.size ? '250px' : '350px')};
   border-radius: 30px;
   margin: 10px;
   justify-content: center;

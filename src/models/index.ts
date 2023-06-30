@@ -1,3 +1,8 @@
+type Genres = {
+  id: number;
+  name: string;
+};
+
 export type Movie = {
   genreId: number;
   title: string;
@@ -8,6 +13,9 @@ export type Movie = {
   overview: string;
   vote_average: number;
   backdrop_path: string;
+  runtime: string;
+  release_date: string;
+  genres: Genres[];
 };
 
 export type Genre = {

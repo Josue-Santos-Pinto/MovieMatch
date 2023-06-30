@@ -15,6 +15,13 @@ export default {
   },
   getMovieDetail: async (id: number) => {
     let res = await axios.get(`${API_BASE_URL}/movie/${id}?api_key=${KEY}&language=pt`);
+    console.log(res.data);
+    return res.data;
+  },
+  getRelatedMovie: async (id: number) => {
+    let res = await axios.get(
+      `${API_BASE_URL}/movie/${id}/similar?api_key=${KEY}&language=pt&with_original_language=en`
+    );
     return res.data;
   },
   getMovieImage: async (id: number) => {
