@@ -15,7 +15,7 @@ export function ListItem({ data, size }: dataProps) {
   const navigation = useNavigation();
   return (
     <Item
-      onPress={() => navigation.navigate('MovieItem', { id: data.id })}
+      onPress={() => navigation.navigate('MovieItem', { id: data.id, platform: 'movie' })}
       activeOpacity={0.7}
       size={size}
     >

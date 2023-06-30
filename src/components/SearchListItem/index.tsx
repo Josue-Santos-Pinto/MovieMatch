@@ -8,14 +8,17 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 type dataProps = {
   data: Movie;
-  isLast?: boolean;
+  platform: string;
 };
 
-export function SearchListItem({ data, isLast }: dataProps) {
+export function SearchListItem({ data, platform }: dataProps) {
   const navigation = useNavigation();
 
   return (
-    <Item onPress={() => navigation.navigate('MovieItem', { id: data.id })} activeOpacity={0.7}>
+    <Item
+      onPress={() => navigation.navigate('MovieItem', { id: data.id, platform })}
+      activeOpacity={0.7}
+    >
       <ItemImg
         source={{
           uri: `${

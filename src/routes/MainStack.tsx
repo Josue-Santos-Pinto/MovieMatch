@@ -8,6 +8,7 @@ export type RootStackProps = {
   Home: undefined;
   MovieItem: {
     id: number;
+    platform: string;
   };
   Search: {
     query: string;

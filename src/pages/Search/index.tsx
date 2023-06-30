@@ -78,9 +78,7 @@ export function Search() {
         {currentItem === 'Filmes' && average && average.results && (
           <FlatList
             data={average.results}
-            renderItem={({ item, index }) => (
-              <SearchListItem data={item} isLast={index === length - 1} />
-            )}
+            renderItem={({ item, index }) => <SearchListItem data={item} platform="movie" />}
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
             showsVerticalScrollIndicator={false}
@@ -90,9 +88,7 @@ export function Search() {
         {currentItem === 'Series' && series && series.results && (
           <FlatList
             data={series.results}
-            renderItem={({ item, index }) => (
-              <SearchListItem data={item} isLast={index === length - 1} />
-            )}
+            renderItem={({ item, index }) => <SearchListItem data={item} platform="tv" />}
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
             showsVerticalScrollIndicator={false}
@@ -102,9 +98,7 @@ export function Search() {
         {currentItem === 'Documentários' && documentary && documentary.results && (
           <FlatList
             data={documentary.results}
-            renderItem={({ item, index }) => (
-              <SearchListItem data={item} isLast={index === length - 1} />
-            )}
+            renderItem={({ item, index }) => <SearchListItem data={item} platform="movie" />}
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
             showsVerticalScrollIndicator={false}

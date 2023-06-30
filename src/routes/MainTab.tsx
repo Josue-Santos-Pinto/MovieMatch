@@ -14,6 +14,7 @@ export type RootTabProps = {
   Perfil: undefined;
   MovieItem: {
     id: number;
+    platform: string;
   };
 };
 

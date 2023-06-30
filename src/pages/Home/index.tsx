@@ -53,7 +53,12 @@ export function Home() {
       </HeaderArea>
       {randomMovie && (
         <DailyMovie
-          onPress={() => navigation.navigate('MovieItem', { id: randomMovie[randomMovieIndex].id })}
+          onPress={() =>
+            navigation.navigate('MovieItem', {
+              id: randomMovie[randomMovieIndex].id,
+              platform: 'movie',
+            })
+          }
           activeOpacity={0.7}
         >
           <DailyMovieImg

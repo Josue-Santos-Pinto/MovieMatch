@@ -15,14 +15,13 @@ export default {
     );
     return res.data;
   },
-  getMovieDetail: async (id: number) => {
-    let res = await axios.get(`${API_BASE_URL}/movie/${id}?api_key=${KEY}&language=pt-BR`);
-    console.log(res.data);
+  getMovieDetail: async (id: number, platform: string) => {
+    let res = await axios.get(`${API_BASE_URL}/${platform}/${id}?api_key=${KEY}&language=pt-BR`);
     return res.data;
   },
-  getRelatedMovie: async (id: number) => {
+  getRelatedMovie: async (id: number, platform: string) => {
     let res = await axios.get(
-      `${API_BASE_URL}/movie/${id}/similar?api_key=${KEY}&language=pt-BR&page=1`
+      `${API_BASE_URL}/${platform}/${id}/similar?api_key=${KEY}&language=pt-BR&page=1`
     );
     return res.data;
   },
