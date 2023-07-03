@@ -34,6 +34,8 @@ import {
   RelatedMoviesArea,
   RelatedMoviesTitle,
   RelatedMovies,
+  InProduction,
+  SerieInfo,
 } from './styles';
 
 import api from '../../services/api';
@@ -44,11 +46,10 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome';
 import { RootTabProps } from '../../routes/MainTab';
 import { useQuery } from 'react-query';
-import { ListItem } from '../../components/ListItem';
-import { Loading } from '../../components/Loading';
-import { SerieItem } from '../../components/SerieItem';
+import { ListItem } from '../ListItem';
+import { Loading } from '../Loading';
 
-export function MovieItem() {
+export function SerieItem() {
   const route = useRoute<RouteProp<RootTabProps, 'MovieItem'>>();
 
   const id = route.params.id;
@@ -60,20 +61,7 @@ export function MovieItem() {
   const [buyProvider, setBuyProvider] = useState<Provider[] | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const { data: movieDetail, isLoading } = useQuery<Movie>(
-    ['movieDetail', id],
-    async () => {
-      if (platform === 'movie') {
-        return await api.getMovieDetail(id, platform);
-      }
-      return null;
-    },
-    {
-      enabled: platform === 'movie',
-    }
-  );
-
-  const { data: serieDetail } = useQuery<Serie>(
+  const { data: serieDetail, isLoading } = useQuery<Serie>(
     ['serieDetail', id],
     async () => {
       if (platform === 'tv') {
@@ -108,14 +96,16 @@ export function MovieItem() {
         <BackButton onPress={() => navigation.goBack()}>
           <FontAwesome5Icon name="chevron-left" size={25} color="#fff" />
         </BackButton>
-        {movieDetail && !serieDetail && (
+        {/*SERIE DETAILS */}
+
+        {serieDetail && (
           <>
             <BannerArea>
               <BannerImg
                 source={{
                   uri: `${
-                    movieDetail.backdrop_path
-                      ? IMG + movieDetail.backdrop_path
+                    serieDetail.backdrop_path
+                      ? IMG + serieDetail.backdrop_path
                       : 'https://firebasestorage.googleapis.com/v0/b/guitarstore-a2356.appspot.com/o/image-coming-soon-placeholder.png?alt=media&token=a192c2bb-1477-4350-944d-777cd225a33d'
                   }`,
                 }}
@@ -125,17 +115,21 @@ export function MovieItem() {
             <MovieInfo>
               <HeaderInfoArea>
                 <TitleArea>
-                  <Title>{movieDetail.title}</Title>
+                  <Title>{serieDetail.name}</Title>
+                  <InProduction>{serieDetail.in_production ? '(Em Lançamento)' : ''}</InProduction>
                 </TitleArea>
                 <MovieDetails>
-                  <DurationArea>
-                    <FontAwesome5Icon name="clock-o" size={12} color="#BBBBBB" />
-                    <Duration>{movieDetail.runtime} minutos</Duration>
-                  </DurationArea>
+                  {serieDetail.episode_run_time.length > 0 && (
+                    <DurationArea>
+                      <FontAwesome5Icon name="clock-o" size={12} color="#BBBBBB" />
+                      <Duration>{serieDetail.episode_run_time[0]} minutos</Duration>
+                    </DurationArea>
+                  )}
+
                   <RatedArea>
                     <FontAwesome5Icon name="star" size={12} color="#BBBBBB" />
                     <Rated>
-                      {parseFloat(movieDetail.vote_average.toString()).toFixed(1)} (IMDb){' '}
+                      {parseFloat(serieDetail.vote_average.toString()).toFixed(1)} (IMDb){' '}
                     </Rated>
                   </RatedArea>
                 </MovieDetails>
@@ -147,18 +141,27 @@ export function MovieItem() {
                   paddingVertical: 15,
                 }}
               >
-                {movieDetail.release_date && (
-                  <ReleaseArea>
-                    <ReleaseTitle>Data de lançamento</ReleaseTitle>
-                    <ReleaseDate>{formatDate(movieDetail.release_date)}</ReleaseDate>
-                  </ReleaseArea>
-                )}
+                <SerieInfo>
+                  {serieDetail.first_air_date && (
+                    <ReleaseArea>
+                      <ReleaseTitle>Data de lançamento</ReleaseTitle>
+                      <ReleaseDate>{formatDate(serieDetail.first_air_date)}</ReleaseDate>
+                    </ReleaseArea>
+                  )}
+                  {serieDetail.number_of_seasons && (
+                    <ReleaseArea>
+                      <ReleaseTitle>Temporadas e Episódios</ReleaseTitle>
+                      <ReleaseDate>Temporadas: {serieDetail.number_of_seasons}</ReleaseDate>
+                      <ReleaseDate>Episódios: {serieDetail.number_of_episodes}</ReleaseDate>
+                    </ReleaseArea>
+                  )}
+                </SerieInfo>
 
                 <GenresArea>
                   <GenresTitle>Gêneros</GenresTitle>
                   <GenreList>
-                    {movieDetail.genres &&
-                      movieDetail.genres.map((item, index) => (
+                    {serieDetail.genres &&
+                      serieDetail.genres.map((item, index) => (
                         <GenreButton key={index}>
                           <GenreButtonText>{item.name}</GenreButtonText>
                         </GenreButton>
@@ -168,8 +171,8 @@ export function MovieItem() {
               </HeaderInfoArea>
 
               <DescArea>
-                {movieDetail.overview ? (
-                  <DescText>{movieDetail.overview}</DescText>
+                {serieDetail.overview ? (
+                  <DescText>{serieDetail.overview}</DescText>
                 ) : (
                   <MaterialCommunityIcons name="movie-off" size={40} color="#fff" />
                 )}
@@ -177,7 +180,7 @@ export function MovieItem() {
 
               {relatedMovie && (
                 <RelatedMoviesArea>
-                  <RelatedMoviesTitle>Assista também:</RelatedMoviesTitle>
+                  <RelatedMoviesTitle>Series Relacionadas</RelatedMoviesTitle>
                   <RelatedMovies>
                     {relatedMovie && relatedMovie.results && relatedMovie.results.length > 0 && (
                       <FlatList
@@ -194,10 +197,6 @@ export function MovieItem() {
             </MovieInfo>
           </>
         )}
-
-        {/*SERIE DETAILS */}
-
-        {serieDetail && !movieDetail && <SerieItem />}
       </Scroller>
     </Container>
   );

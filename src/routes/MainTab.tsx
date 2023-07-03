@@ -5,10 +5,12 @@ import { MovieItem } from '../pages/MovieItem';
 import { Search } from '../pages/Search';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Perfil } from '../pages/Perfil';
+import HomeStack from './HomeStack';
+import SearchStack from './SearchStack';
 
 export type RootTabProps = {
-  Home: undefined;
-  Search: {
+  HomeStack: undefined;
+  SearchStack: {
     query: string;
   };
   Perfil: undefined;
@@ -34,11 +36,12 @@ export default () => {
           alignItems: 'center',
         },
         tabBarLabelStyle: { display: 'none' },
+        tabBarHideOnKeyboard: true,
       }}
     >
       <Tab.Screen
-        name="Home"
-        component={Home}
+        name="HomeStack"
+        component={HomeStack}
         options={{
           tabBarIcon: ({ color, focused }) => {
             return <Icon name="home" size={25} color={focused ? '#ff8f70' : '#ccc'} />;
@@ -46,8 +49,8 @@ export default () => {
         }}
       />
       <Tab.Screen
-        name="Search"
-        component={Search}
+        name="SearchStack"
+        component={SearchStack}
         options={{
           tabBarIcon: ({ color, focused }) => {
             return <Icon name="play-circle" size={25} color={focused ? '#ff8f70' : '#ccc'} />;

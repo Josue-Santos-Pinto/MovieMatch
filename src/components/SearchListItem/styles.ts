@@ -1,10 +1,11 @@
 import styled from 'styled-components/native';
 
 export const Item = styled.TouchableOpacity`
-  width: 150px;
+  min-width: 150px;
   max-height: 200px;
   border-radius: 30px;
-  margin: 10px;
+  margin-horizontal: 6px;
+  margin-vertical: 10px;
   justify-content: center;
   align-items: center;
   overflow: hidden;

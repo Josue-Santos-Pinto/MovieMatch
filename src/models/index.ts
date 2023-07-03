@@ -20,6 +20,7 @@ export type Movie = {
 
 export type Serie = {
   backdrop_path: string;
+  episode_run_time: number[];
   first_air_date: string;
   genres: Genres[];
   id: number;

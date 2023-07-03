@@ -9,9 +9,9 @@ export default {
     return res.data;
   },
 
-  getSearchedMovie: async (movie: string) => {
+  getSearchedMovie: async (movie: string, page: number, platform: string) => {
     let res = await axios.get(
-      `${SEARCH}?api_key=${KEY}&query=${movie}&page=1&sort_by=vote_average.desc&language=pt-BR&with_original_language=en`
+      `${SEARCH}/${platform}?api_key=${KEY}&query=${movie}&page=${page}&sort_by=vote_average.desc&language=pt-BR&with_original_language=en`
     );
     return res.data;
   },
@@ -21,7 +21,7 @@ export default {
   },
   getRelatedMovie: async (id: number, platform: string) => {
     let res = await axios.get(
-      `${API_BASE_URL}/${platform}/${id}/similar?api_key=${KEY}&language=pt-BR&page=1`
+      `${API_BASE_URL}/${platform}/${id}/similar?api_key=${KEY}&language=pt-BR&page=1&with_original_language=en`
     );
     return res.data;
   },

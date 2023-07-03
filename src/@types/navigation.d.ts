@@ -1,4 +1,4 @@
-import { RootStackProps } from '../routes/MainStack';
+import { RootStackProps } from '../routes/HomeStack';
 import { RootTabProps } from '../routes/MainTab';
 
 export declare global {

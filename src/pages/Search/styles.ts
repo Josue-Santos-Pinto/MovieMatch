@@ -62,7 +62,6 @@ export const ItemBar = styled.View`
 
 export const MoviesList = styled.View`
   flex: 1;
-  padding: 10px;
 `;
 
 export const NotFoundArea = styled.View`

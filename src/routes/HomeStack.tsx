@@ -22,7 +22,6 @@ export default () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="MovieItem" component={MovieItem} />
-      <Stack.Screen name="Search" component={Search} />
     </Stack.Navigator>
   );
 };

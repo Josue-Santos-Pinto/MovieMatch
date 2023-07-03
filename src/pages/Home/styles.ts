@@ -44,7 +44,7 @@ export const DailyMovieInfo = styled.View`
   height: 60px;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  padding-horizontal: 20px;
   /* From https://css.glass */
   background: rgba(0, 0, 0, 0.39);
   border-radius: 16px;
