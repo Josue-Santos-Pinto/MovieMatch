@@ -12,7 +12,7 @@ export function Pagination({ page, setPage, totalPage }: DataProps) {
   return (
     <PaginationArea>
       <PrevPageButton onPress={() => setPage(Math.max(page - 1, 1))} disabled={page === 1}>
-        <FontAwesome5 name="chevron-left" size={25} color="#fff" />
+        <FontAwesome5 name="chevron-left" size={25} color={page === 1 ? '#aaa' : '#fff'} />
       </PrevPageButton>
       <Page>
         <PageText>{page}</PageText>
@@ -21,7 +21,7 @@ export function Pagination({ page, setPage, totalPage }: DataProps) {
         onPress={() => setPage(page < totalPage ? page + 1 : page)}
         disabled={page == totalPage}
       >
-        <FontAwesome5 name="chevron-right" size={25} color="#fff" />
+        <FontAwesome5 name="chevron-right" size={25} color={page === totalPage ? '#aaa' : '#fff'} />
       </NextPageButton>
     </PaginationArea>
   );

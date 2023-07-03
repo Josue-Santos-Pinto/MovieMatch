@@ -19,10 +19,12 @@ import {
 import { IMG } from '../../keys';
 import { Movie } from '../../models';
 import { useNavigation } from '@react-navigation/native';
+import { Loading } from '../../components/Loading';
 
 export function Home() {
   const navigation = useNavigation();
   const [randomMovieIndex, setRandomMovieIndex] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
 
   const generateRandomNumbers = () => {
     return Math.floor(Math.random() * 500);
@@ -62,6 +64,7 @@ export function Home() {
             }
             activeOpacity={0.7}
           >
+            {loading && <Loading load={loading} />}
             <DailyMovieImg
               source={{
                 uri: `${
@@ -70,6 +73,7 @@ export function Home() {
                     : 'https://firebasestorage.googleapis.com/v0/b/guitarstore-a2356.appspot.com/o/image-coming-soon-placeholder.png?alt=media&token=a192c2bb-1477-4350-944d-777cd225a33d'
                 }`,
               }}
+              onLoad={() => setLoading(false)}
               resizeMode="cover"
             />
             <DailyMovieInfo>

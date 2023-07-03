@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 
 export const Item = styled.TouchableOpacity`
   min-width: 150px;
+  min-height: 150px;
   max-height: 200px;
   border-radius: 30px;
   margin-horizontal: 6px;
