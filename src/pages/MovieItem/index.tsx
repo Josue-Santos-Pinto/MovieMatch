@@ -111,6 +111,7 @@ export function MovieItem() {
         {movieDetail && !serieDetail && (
           <>
             <BannerArea>
+              {loading && <Loading load={loading} />}
               <BannerImg
                 source={{
                   uri: `${
@@ -120,6 +121,7 @@ export function MovieItem() {
                   }`,
                 }}
                 resizeMode="cover"
+                onLoad={() => setLoading(false)}
               />
             </BannerArea>
             <MovieInfo>

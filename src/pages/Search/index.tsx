@@ -82,6 +82,7 @@ export function Search() {
   useEffect(() => {
     if (search.trim() === '') {
       setSearchedMovie('');
+      setPage(1);
     }
   }, [search]);
 

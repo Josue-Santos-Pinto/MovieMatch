@@ -5,6 +5,7 @@ import { IMG } from '../../keys';
 import { useNavigation } from '@react-navigation/native';
 import api from '../../services/api';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Loading } from '../Loading';
 
 type dataProps = {
   data: Movie;
@@ -13,12 +14,18 @@ type dataProps = {
 
 export function SearchListItem({ data, platform }: dataProps) {
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleImageSource = () => {
+    setIsLoading(false);
+  };
 
   return (
     <Item
       onPress={() => navigation.navigate('MovieItem', { id: data.id, platform })}
       activeOpacity={0.7}
     >
+      {isLoading && <Loading load={isLoading} />}
       <ItemImg
         source={{
           uri: `${
@@ -28,6 +35,7 @@ export function SearchListItem({ data, platform }: dataProps) {
           }`,
         }}
         resizeMode="cover"
+        onLoad={handleImageSource}
       />
       <StarsArea>
         <Icon name="star" size={25} color="#f7d22e" />
