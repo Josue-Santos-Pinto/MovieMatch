@@ -32,8 +32,6 @@ export function Search() {
   const [page, setPage] = useState(1);
   const [currentItem, setCurrentItem] = useState('Filmes');
 
-  const navigation = useNavigation();
-
   const findItemList = ['Filmes', 'Series', 'Documentários'];
 
   const { data: average, isLoading } = useQuery(['average', page, searchedMovie], async () => {

@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { MovieItem } from '../pages/MovieItem';
 import { Search } from '../pages/Search';
 
-export type RootStackProps = {
+export type RootSearchStackProps = {
   Search: undefined;
   MovieItem: {
     id: number;
@@ -11,11 +11,11 @@ export type RootStackProps = {
   };
 };
 
-const Stack = createStackNavigator<RootStackProps>();
+const Stack = createStackNavigator<RootSearchStackProps>();
 
 export default () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName="Search" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="MovieItem" component={MovieItem} />
     </Stack.Navigator>

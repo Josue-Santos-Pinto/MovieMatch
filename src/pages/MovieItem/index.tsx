@@ -58,7 +58,7 @@ export function MovieItem() {
   const [flatrateProvider, setFlatrateProvider] = useState<Provider[] | null>(null);
   const [rentProvider, setRentProvider] = useState<Provider[] | null>(null);
   const [buyProvider, setBuyProvider] = useState<Provider[] | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const { data: movieDetail, isLoading } = useQuery<Movie>(
     ['movieDetail', id],
@@ -85,8 +85,6 @@ export function MovieItem() {
       enabled: platform === 'tv',
     }
   );
-
-  console.log(serieDetail);
 
   const { data: relatedMovie } = useQuery(['relatedMovie', id], async () => {
     return await api.getRelatedMovie(id, platform);

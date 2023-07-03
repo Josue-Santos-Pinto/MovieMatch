@@ -7,13 +7,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Perfil } from '../pages/Perfil';
 import HomeStack from './HomeStack';
 import SearchStack from './SearchStack';
+import PerfilStack from './PerfilStack';
 
 export type RootTabProps = {
   HomeStack: undefined;
-  SearchStack: {
-    query: string;
-  };
-  Perfil: undefined;
+  SearchStack: undefined;
+  PerfilStack: undefined;
   MovieItem: {
     id: number;
     platform: string;
@@ -58,8 +57,8 @@ export default () => {
         }}
       />
       <Tab.Screen
-        name="Perfil"
-        component={Perfil}
+        name="PerfilStack"
+        component={PerfilStack}
         options={{
           tabBarIcon: ({ color, focused }) => {
             return <Icon name="user" size={25} color={focused ? '#ff8f70' : '#ccc'} />;
