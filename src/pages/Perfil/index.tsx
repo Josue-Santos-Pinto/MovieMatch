@@ -1,19 +1,28 @@
 import { useEffect } from 'react';
-import { Container, PageText } from './styles';
+import { Container, GoToLogin, GoToLoginArea, GoToLoginContainer, PageText } from './styles';
 import { useNavigation } from '@react-navigation/native';
 
 export function Perfil() {
   const navigation = useNavigation();
-  let id = '';
+  const id = '';
 
   useEffect(() => {
     if (id == '') {
-      navigation.reset({ index: 1, routes: [{ name: 'Login' }] });
+      return navigation.navigate('AuthStack');
     }
   }, [id]);
   return (
     <Container>
-      <PageText> Perfil</PageText>
+      {!id && (
+        <GoToLoginContainer source={require('../../assets/cinema.jpg')}>
+          <GoToLoginArea>
+            <PageText> É necessario fazer login {'\n'} para acessar essa página</PageText>
+            <GoToLogin onPress={() => navigation.navigate('AuthStack')}>
+              <PageText>Fazer Login</PageText>
+            </GoToLogin>
+          </GoToLoginArea>
+        </GoToLoginContainer>
+      )}
     </Container>
   );
 }
