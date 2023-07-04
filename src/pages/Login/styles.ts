@@ -14,6 +14,17 @@ export const Container = styled.ImageBackground`
 `;
 export const PageText = styled.Text``;
 
+export const BackButton = styled.TouchableOpacity`
+  width: 60px;
+  height: 60px;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 99;
+`;
+
 export const HeaderLogoArea = styled.View`
   width: 100%;
   height: 200px;

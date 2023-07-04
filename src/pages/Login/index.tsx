@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import { BackHandler } from 'react-native';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
+  BackButton,
   Container,
   GoToRegisterButton,
   HeaderImg,
@@ -16,12 +17,23 @@ import {
   SubmitButtonText,
 } from './styles';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import nodeApi from '../../services/nodeApi';
 
 export function Login() {
   const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    let res = await nodeApi.login(email, password);
+    console.log(res);
+  };
 
   return (
     <Container source={require('../../assets/cinema.jpg')} resizeMode="cover">
+      <BackButton onPress={() => navigation.goBack()}>
+        <FontAwesome5Icon name="chevron-left" size={25} color="#fff" />
+      </BackButton>
       <HeaderLogoArea>
         <HeaderLogo>
           <HeaderImg source={require('../../assets/cinecam.png')} resizeMode="cover" />
@@ -30,15 +42,26 @@ export function Login() {
 
       <InputArea>
         <FontAwesome5Icon name="user" size={25} color="#bcbcbc" />
-        <Input />
+        <Input
+          placeholder="usuario@gmail.com"
+          placeholderTextColor="#bcbcbc"
+          value={email}
+          onChangeText={(e) => setEmail(e)}
+        />
       </InputArea>
 
       <InputArea>
         <FontAwesome5Icon name="lock" size={25} color="#bcbcbc" />
-        <Input secureTextEntry />
+        <Input
+          placeholder="123456"
+          placeholderTextColor="#bcbcbc"
+          secureTextEntry
+          value={password}
+          onChangeText={(e) => setPassword(e)}
+        />
       </InputArea>
 
-      <SubmitButton>
+      <SubmitButton onPress={handleLogin}>
         <SubmitButtonText>Login</SubmitButtonText>
       </SubmitButton>
 
