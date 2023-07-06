@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView, Alert } from 'react-native';
+import { ScrollView, Alert, Modal } from 'react-native';
 import {
   BackButton,
   Container,
@@ -15,12 +15,17 @@ import {
   SubmitButton,
   SubmitButtonText,
   InputBox,
+  Shadow,
+  LoadingBox,
+  LoadingText,
 } from './styles';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import nodeApi from '../../services/nodeApi';
 import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Loading } from '../../components/Loading';
+import { useState } from 'react';
 
 type FormDataType = {
   name: string;
@@ -50,6 +55,7 @@ const signUpSchema = yup.object({
 
 export function Register() {
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
@@ -60,6 +66,7 @@ export function Register() {
   });
 
   const handleLogin = async (data: FormDataType) => {
+    setIsLoading(true);
     let res = await nodeApi.register(
       data.name,
       data.email.toLowerCase(),
@@ -68,11 +75,14 @@ export function Register() {
     );
     if (!res.error) {
       if (res.status == true) {
-        Alert.alert('Usuário criado com sucesso');
         navigation.reset({ index: 1, routes: [{ name: 'Login' }] });
+        setIsLoading(false);
+        Alert.alert('Usuário criado com sucesso');
       }
     } else {
       console.log(res.error);
+      setIsLoading(false);
+      Alert.alert('Ocorreu um erro');
     }
   };
 
@@ -170,6 +180,14 @@ export function Register() {
           </GoToRegisterButton>
         </NotHaveAccountArea>
       </ScrollView>
+      <Modal visible={isLoading} animationType="fade" transparent={true}>
+        <Shadow>
+          <LoadingBox>
+            <Loading load={isLoading} color="blue" />
+            <LoadingText>Carregando...</LoadingText>
+          </LoadingBox>
+        </Shadow>
+      </Modal>
     </Container>
   );
 }

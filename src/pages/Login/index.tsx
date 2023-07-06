@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView } from 'react-native';
+import { ScrollView, Modal, Alert } from 'react-native';
 import {
   BackButton,
   Container,
@@ -15,6 +15,9 @@ import {
   SubmitButton,
   SubmitButtonText,
   InputBox,
+  LoadingBox,
+  LoadingText,
+  Shadow,
 } from './styles';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import nodeApi from '../../services/nodeApi';
@@ -24,6 +27,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch } from 'react-redux';
 import UserActionTypes from '../../redux/user/actions-type';
 import { loginUser } from '../../redux/user/actions';
+import { useState } from 'react';
+import { Loading } from '../../components/Loading';
 
 type FormDataType = {
   email: string;
@@ -45,6 +50,8 @@ export function Login() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -53,17 +60,20 @@ export function Login() {
     resolver: yupResolver(signUpSchema),
   });
 
-  console.log(errors);
-
   const handleLogin = async (data: FormDataType) => {
+    setIsLoading(true);
     let res = await nodeApi.login(data.email.toLowerCase(), data.password);
+    console.log(res);
     if (!res.error) {
       if (res.token) {
-        dispatch(loginUser({ token: res.token }));
+        dispatch(loginUser({ token: res.token, id: res.id }));
         navigation.reset({ index: 1, routes: [{ name: 'MainTab' }] });
+        setIsLoading(false);
       }
     } else {
       console.log(res.error);
+      setIsLoading(false);
+      Alert.alert('Ocorreu um erro');
     }
   };
 
@@ -125,6 +135,14 @@ export function Login() {
           </GoToRegisterButton>
         </NotHaveAccountArea>
       </ScrollView>
+      <Modal visible={isLoading} animationType="fade" transparent={true}>
+        <Shadow>
+          <LoadingBox>
+            <Loading load={isLoading} color="blue" />
+            <LoadingText>Carregando...</LoadingText>
+          </LoadingBox>
+        </Shadow>
+      </Modal>
     </Container>
   );
 }

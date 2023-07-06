@@ -1,17 +1,29 @@
 import UserActionTypes from './actions-type';
 
+type FavType = {
+  id: number;
+  img: string;
+  vote_average: number;
+};
+
 type initialStateType = {
-  token: string;
+  userKeys: {
+    id: string;
+    token: string;
+  };
 };
 
 const initialState: initialStateType = {
-  token: '',
+  userKeys: {
+    id: '',
+    token: '',
+  },
 };
 
 const userReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case UserActionTypes.LOGIN:
-      return { ...state, token: action.payload };
+      return { ...state, userKeys: action.payload };
     case UserActionTypes.LOGOUT:
       return { ...state, token: null };
   }

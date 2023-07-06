@@ -10,9 +10,10 @@ import { Loading } from '../Loading';
 type dataProps = {
   data: Movie;
   size?: string;
+  platform: string;
 };
 
-export function ListItem({ data, size }: dataProps) {
+export function ListItem({ data, size, platform }: dataProps) {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -21,7 +22,7 @@ export function ListItem({ data, size }: dataProps) {
   };
   return (
     <Item
-      onPress={() => navigation.navigate('MovieItem', { id: data.id, platform: 'movie' })}
+      onPress={() => navigation.navigate('MovieItem', { id: data.id, platform: platform })}
       activeOpacity={0.7}
       size={size}
     >

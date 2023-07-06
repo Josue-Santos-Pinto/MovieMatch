@@ -180,12 +180,14 @@ export function SerieItem() {
 
               {relatedMovie && (
                 <RelatedMoviesArea>
-                  <RelatedMoviesTitle>Series Relacionadas</RelatedMoviesTitle>
+                  <RelatedMoviesTitle>Assista também</RelatedMoviesTitle>
                   <RelatedMovies>
                     {relatedMovie && relatedMovie.results && relatedMovie.results.length > 0 && (
                       <FlatList
                         data={relatedMovie.results}
-                        renderItem={({ item, index }) => <ListItem data={item} size="small" />}
+                        renderItem={({ item, index }) => (
+                          <ListItem data={item} size="small" platform="tv" />
+                        )}
                         keyExtractor={(item) => item.id.toString()}
                         horizontal
                         showsHorizontalScrollIndicator={false}

@@ -1,6 +1,8 @@
 import axios from 'axios';
-import { NODE_API } from '../keys';
+//import { NODE_API } from '../keys';
 import qs from 'qs';
+
+let NODE_API = 'http://192.168.1.101:3000';
 
 export default {
   login: async (email: string, password: string) => {
@@ -39,6 +41,20 @@ export default {
       return res.data;
     } catch (err) {
       console.log(err);
+    }
+  },
+
+  getUserInfo: async (id: string, token: string) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      let res = await axios.get(`${NODE_API}/${id}/user`, config);
+      return res.data; // A resposta da API
+    } catch (error) {
+      console.error(error);
     }
   },
 };

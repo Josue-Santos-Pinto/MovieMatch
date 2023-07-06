@@ -1,33 +1,87 @@
 import { useEffect } from 'react';
-import { Container, GoToLogin, GoToLoginArea, GoToLoginContainer, PageText } from './styles';
+import { ScrollView } from 'react-native';
+import {
+  Container,
+  HeaderArea,
+  MenuArea,
+  MenuBox,
+  MenuText,
+  UserAvatar,
+  UserAvatarArea,
+  UserCard,
+  UserEmail,
+  UserInfoArea,
+  UserName,
+} from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
+import { GoToLogin } from '../../components/GoToLogin';
+import { useQuery } from 'react-query';
+import nodeApi from '../../services/nodeApi';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 export function Perfil() {
   const navigation = useNavigation();
-  const { token } = useSelector((rootReducer) => rootReducer.userReducer);
+  const { userKeys } = useSelector((rootReducer) => rootReducer.userReducer);
+
+  const { data, isLoading } = useQuery(['userInfo', userKeys], async () => {
+    if (userKeys.token && userKeys.id) {
+      return await nodeApi.getUserInfo(userKeys.id, userKeys.token);
+    }
+
+    return null;
+  });
+
+  const menuPerfil = [
+    { name: 'Favoritos', icon: 'star', screen: 'Favorite' },
+    { name: 'Perfil', icon: 'user', screen: 'UserConfig' },
+    { name: 'Perfil', icon: 'user', screen: 'UserConfig' },
+  ];
+
+  console.log(data);
 
   useEffect(() => {
-    console.log(token);
-  }, [token]);
+    console.log(userKeys);
+  }, [userKeys]);
 
   useEffect(() => {
-    if (token == '') {
+    if (userKeys == '') {
       return navigation.navigate('AuthStack');
     }
-  }, [token]);
+  }, [userKeys]);
   return (
-    <Container>
-      {!token && (
-        <GoToLoginContainer source={require('../../assets/cinema.jpg')}>
-          <GoToLoginArea>
-            <PageText> É necessario fazer login {'\n'} para acessar essa página</PageText>
-            <GoToLogin onPress={() => navigation.navigate('AuthStack')}>
-              <PageText>Fazer Login</PageText>
-            </GoToLogin>
-          </GoToLoginArea>
-        </GoToLoginContainer>
+    <>
+      {userKeys.token && !isLoading ? (
+        <Container>
+          <HeaderArea>
+            <UserCard>
+              <UserAvatarArea>
+                <UserAvatar />
+              </UserAvatarArea>
+              <UserInfoArea>
+                <UserName>{data.name}</UserName>
+                <UserEmail>{data.email}</UserEmail>
+              </UserInfoArea>
+            </UserCard>
+          </HeaderArea>
+          <ScrollView style={{ flex: 1 }}>
+            <MenuArea>
+              {menuPerfil.map((item, index) => (
+                <MenuBox key={index}>
+                  <FontAwesome5Icon name={item.icon} size={35} color="#bcbcbc" />
+                  <MenuText>{item.name}</MenuText>
+                </MenuBox>
+              ))}
+              <MenuBox>
+                <FontAwesome5Icon name="sign-out-alt" size={35} color="#bcbcbc" />
+                <MenuText>Sair</MenuText>
+              </MenuBox>
+            </MenuArea>
+          </ScrollView>
+        </Container>
+      ) : (
+        <GoToLogin />
       )}
-    </Container>
+    </>
   );
 }

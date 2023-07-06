@@ -182,7 +182,9 @@ export function MovieItem() {
                     {relatedMovie && relatedMovie.results && relatedMovie.results.length > 0 && (
                       <FlatList
                         data={relatedMovie.results}
-                        renderItem={({ item, index }) => <ListItem data={item} size="small" />}
+                        renderItem={({ item, index }) => (
+                          <ListItem data={item} size="small" platform="movie" />
+                        )}
                         keyExtractor={(item) => item.id.toString()}
                         horizontal
                         showsHorizontalScrollIndicator={false}

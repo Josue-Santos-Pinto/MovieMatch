@@ -25,7 +25,7 @@ export const BackButton = styled.TouchableOpacity`
   position: absolute;
   top: 10px;
   left: 10px;
-  z-index: 99;
+  z-index: 9;
 `;
 
 export const HeaderLogoArea = styled.View`
@@ -102,3 +102,29 @@ export const NotHaveAccountText = styled.Text`
   font-size: 12px;
 `;
 export const GoToRegisterButton = styled.TouchableOpacity``;
+
+export const Shadow = styled.View`
+  background-color: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+`;
+export const LoadingBox = styled.View`
+  background-color: #fff;
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+`;
+export const LoadingText = styled.Text`
+  flex: 1;
+  color: #000;
+  font-size: 15px;
+`;

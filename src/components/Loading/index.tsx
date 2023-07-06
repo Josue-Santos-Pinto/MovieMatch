@@ -5,13 +5,14 @@ import { IMG } from '../../keys';
 
 type dataProps = {
   load: boolean;
+  color?: string;
 };
 
-export function Loading({ load }: dataProps) {
+export function Loading({ load, color }: dataProps) {
   if (!load) return null;
   return (
     <LoadingArea>
-      <Load size={25} color="#fff" />
+      <Load size={25} color={color ? color : '#fff'} />
     </LoadingArea>
   );
 }

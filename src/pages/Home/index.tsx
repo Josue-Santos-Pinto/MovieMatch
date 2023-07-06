@@ -89,7 +89,7 @@ export function Home() {
             {data.results && data.results.length > 0 && (
               <FlatList
                 data={data.results}
-                renderItem={({ item, index }) => <ListItem data={item} />}
+                renderItem={({ item, index }) => <ListItem data={item} platform="movie" />}
                 keyExtractor={(item) => item.id.toString()}
                 horizontal
                 showsHorizontalScrollIndicator={false}
