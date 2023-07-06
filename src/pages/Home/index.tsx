@@ -62,6 +62,7 @@ export function Home() {
                 platform: 'movie',
               })
             }
+            load={loading}
             activeOpacity={0.7}
           >
             {loading && <Loading load={loading} />}

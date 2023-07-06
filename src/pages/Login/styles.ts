@@ -1,6 +1,10 @@
 import styled from 'styled-components/native';
 import { Dimensions } from 'react-native';
 
+type DataProps = {
+  error: boolean;
+};
+
 export const Container = styled.ImageBackground`
   flex: 1;
   width: ${Dimensions.get('screen').width}px;
@@ -12,7 +16,6 @@ export const Container = styled.ImageBackground`
   bottom: 0;
   left: 0;
 `;
-export const PageText = styled.Text``;
 
 export const BackButton = styled.TouchableOpacity`
   width: 60px;
@@ -46,15 +49,20 @@ export const HeaderImg = styled.Image`
   height: 100%;
 `;
 
-export const InputArea = styled.View`
+export const InputBox = styled.View`
   width: 80%;
+  margin: 15px auto;
+`;
+
+export const InputArea = styled.View<DataProps>`
   height: 50px;
   background-color: #fff;
   border-radius: 10px;
-  margin: 20px auto;
+  margin-bottom: 5px;
   flex-direction: row;
   align-items: center;
   padding-horizontal: 15px;
+  border: 3px solid ${(props) => (props.error ? 'red' : 'green')};
 `;
 
 export const Input = styled.TextInput`
@@ -62,7 +70,10 @@ export const Input = styled.TextInput`
   padding: 10px;
   color: #000;
 `;
-
+export const ErrorMessage = styled.Text`
+  color: red;
+  font-size: 12px;
+`;
 export const SubmitButton = styled.TouchableOpacity`
   min-width: 130px;
   min-height: 40px;
