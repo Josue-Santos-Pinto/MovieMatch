@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView } from 'react-native';
+import { ScrollView, Alert } from 'react-native';
 import {
   BackButton,
   Container,
@@ -60,8 +60,20 @@ export function Register() {
   });
 
   const handleLogin = async (data: FormDataType) => {
-    let res = await nodeApi.login(data.email.toLowerCase(), data.password);
-    console.log(res);
+    let res = await nodeApi.register(
+      data.name,
+      data.email.toLowerCase(),
+      data.password,
+      data.password_confirm
+    );
+    if (!res.error) {
+      if (res.status == true) {
+        Alert.alert('Usuário criado com sucesso');
+        navigation.reset({ index: 1, routes: [{ name: 'Login' }] });
+      }
+    } else {
+      console.log(res.error);
+    }
   };
 
   return (
