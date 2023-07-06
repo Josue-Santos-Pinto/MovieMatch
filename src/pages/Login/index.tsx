@@ -29,6 +29,7 @@ import UserActionTypes from '../../redux/user/actions-type';
 import { loginUser } from '../../redux/user/actions';
 import { useState } from 'react';
 import { Loading } from '../../components/Loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type FormDataType = {
   email: string;
@@ -66,6 +67,8 @@ export function Login() {
     console.log(res);
     if (!res.error) {
       if (res.token) {
+        await AsyncStorage.setItem('token', res.token);
+        await AsyncStorage.setItem('id', res.id);
         dispatch(loginUser({ token: res.token, id: res.id }));
         navigation.reset({ index: 1, routes: [{ name: 'MainTab' }] });
         setIsLoading(false);

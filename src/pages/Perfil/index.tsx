@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
 import {
   Container,
@@ -19,18 +19,29 @@ import { GoToLogin } from '../../components/GoToLogin';
 import { useQuery } from 'react-query';
 import nodeApi from '../../services/nodeApi';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Loading } from '../../components/Loading';
 
 export function Perfil() {
   const navigation = useNavigation();
-  const { userKeys } = useSelector((rootReducer) => rootReducer.userReducer);
+  const [token, setToken] = useState<string>('');
+  const [id, setId] = useState<string>('');
 
-  const { data, isLoading } = useQuery(['userInfo', userKeys], async () => {
-    if (userKeys.token && userKeys.id) {
-      return await nodeApi.getUserInfo(userKeys.id, userKeys.token);
+  const { data, isLoading } = useQuery(['userInfo', token, id], async () => {
+    if (token && id) {
+      return await nodeApi.getUserInfo(id, token);
     }
 
     return null;
   });
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('token');
+    await AsyncStorage.removeItem('id');
+    navigation.reset({ index: 1, routes: [{ name: 'MainTab' }] });
+  };
+
+  console.log('TOKEN: ' + token);
+  console.log('ID: ' + id);
 
   const menuPerfil = [
     { name: 'Favoritos', icon: 'star', screen: 'Favorite' },
@@ -38,20 +49,25 @@ export function Perfil() {
     { name: 'Perfil', icon: 'user', screen: 'UserConfig' },
   ];
 
-  console.log(data);
+  useEffect(() => {
+    const getAsyncToken = async () => {
+      let res = await AsyncStorage.getItem('token');
+      if (res) setToken(res);
+    };
+    getAsyncToken();
+  }, []);
 
   useEffect(() => {
-    console.log(userKeys);
-  }, [userKeys]);
+    const getAsyncId = async () => {
+      let res = await AsyncStorage.getItem('id');
+      if (res) setId(res);
+    };
+    getAsyncId();
+  }, []);
 
-  useEffect(() => {
-    if (userKeys == '') {
-      return navigation.navigate('AuthStack');
-    }
-  }, [userKeys]);
   return (
     <>
-      {userKeys.token && !isLoading ? (
+      {!isLoading && token && id && (
         <Container>
           <HeaderArea>
             <UserCard>
@@ -72,16 +88,16 @@ export function Perfil() {
                   <MenuText>{item.name}</MenuText>
                 </MenuBox>
               ))}
-              <MenuBox>
+              <MenuBox onPress={handleLogout}>
                 <FontAwesome5Icon name="sign-out-alt" size={35} color="#bcbcbc" />
                 <MenuText>Sair</MenuText>
               </MenuBox>
             </MenuArea>
           </ScrollView>
         </Container>
-      ) : (
-        <GoToLogin />
       )}
+      {!isLoading && (!token || !id) && <GoToLogin />}
+      {isLoading && <Loading load={isLoading} />}
     </>
   );
 }
