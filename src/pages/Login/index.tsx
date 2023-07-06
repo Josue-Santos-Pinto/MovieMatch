@@ -21,6 +21,9 @@ import nodeApi from '../../services/nodeApi';
 import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useDispatch } from 'react-redux';
+import UserActionTypes from '../../redux/user/actions-type';
+import { loginUser } from '../../redux/user/actions';
 
 type FormDataType = {
   email: string;
@@ -40,6 +43,7 @@ const signUpSchema = yup.object({
 
 export function Login() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const {
     control,
@@ -53,7 +57,14 @@ export function Login() {
 
   const handleLogin = async (data: FormDataType) => {
     let res = await nodeApi.login(data.email.toLowerCase(), data.password);
-    console.log(res);
+    if (!res.error) {
+      if (res.token) {
+        dispatch(loginUser({ token: res.token }));
+        navigation.reset({ index: 1, routes: [{ name: 'MainTab' }] });
+      }
+    } else {
+      console.log(res.error);
+    }
   };
 
   return (
