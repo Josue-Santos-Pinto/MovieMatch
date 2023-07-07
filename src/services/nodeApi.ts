@@ -1,8 +1,6 @@
 import axios from 'axios';
-//import { NODE_API } from '../keys';
+import { NODE_API } from '../keys';
 import qs from 'qs';
-
-let NODE_API = 'http://192.168.1.101:3000';
 
 export default {
   login: async (email: string, password: string) => {

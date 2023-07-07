@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import { Dimensions } from 'react-native';
 
 export const Container = styled.View`
   flex: 1;
@@ -21,7 +20,7 @@ export const UserCard = styled.View`
   align-items: center;
   border: 1px solid #fff;
 `;
-export const UserAvatarArea = styled.View`
+export const UserAvatarArea = styled.TouchableOpacity`
   margin-left: 10px;
   width: 60px;
   height: 60px;
@@ -29,9 +28,9 @@ export const UserAvatarArea = styled.View`
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  background-color: blue;
+  background-color: #fff;
 `;
-export const UserAvatar = styled.View`
+export const UserAvatar = styled.Image`
   width: 100%;
   height: 100%;
 `;
@@ -70,4 +69,42 @@ export const MenuText = styled.Text`
   margin-top: 10px;
   font-size: 16px;
   color: #bcbcbc;
+`;
+
+export const Shadow = styled.TouchableOpacity`
+  background-color: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+  z-index: 9;
+`;
+
+export const PhotoInfo = styled.View`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background-color: #211f30;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+`;
+export const PhotoOption = styled.TouchableOpacity`
+  width: 100%;
+  height: 40px;
+  margin-vertical: 15px;
+  justify-content: center;
+  align-items: center;
+`;
+export const PhotoOptionText = styled.Text`
+  font-size: 20px;
+  font-family: Lato-Bold;
+  color: #fff;
 `;

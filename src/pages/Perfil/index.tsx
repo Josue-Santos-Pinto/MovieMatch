@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
-import { ScrollView } from 'react-native';
+import { Modal, ScrollView } from 'react-native';
 import {
   Container,
   HeaderArea,
   MenuArea,
   MenuBox,
   MenuText,
+  PhotoInfo,
+  PhotoOption,
+  PhotoOptionText,
+  Shadow,
   UserAvatar,
   UserAvatarArea,
   UserCard,
@@ -18,16 +22,25 @@ import { useSelector, useDispatch } from 'react-redux';
 import { GoToLogin } from '../../components/GoToLogin';
 import { useQuery } from 'react-query';
 import nodeApi from '../../services/nodeApi';
-import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Loading } from '../../components/Loading';
+import {
+  launchCamera,
+  launchImageLibrary,
+  ImageLibraryOptions,
+  CameraOptions,
+} from 'react-native-image-picker';
+import { request, PERMISSIONS } from 'react-native-permissions';
 
 export function Perfil() {
   const navigation = useNavigation();
   const [token, setToken] = useState<string>('');
   const [id, setId] = useState<string>('');
+  const [avatar, setAvatar] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const { data, isLoading } = useQuery(['userInfo', token, id], async () => {
+  const { data, isLoading, isError } = useQuery(['userInfo', token, id], async () => {
     if (token && id) {
       return await nodeApi.getUserInfo(id, token);
     }
@@ -39,6 +52,48 @@ export function Perfil() {
     await AsyncStorage.removeItem('id');
     navigation.reset({ index: 1, routes: [{ name: 'MainTab' }] });
   };
+  const launchGalery = async () => {
+    try {
+      const granted = await request(PERMISSIONS.ANDROID.CAMERA);
+      if (granted === 'granted') {
+        const options: ImageLibraryOptions = {
+          mediaType: 'photo',
+        };
+
+        const result = await launchImageLibrary(options);
+
+        if (result.assets) {
+          setAvatar(result.assets[0].uri!);
+          setModalVisible(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const launchPhotoByCamera = async () => {
+    try {
+      const granted = await request(PERMISSIONS.ANDROID.CAMERA);
+      if (granted === 'granted') {
+        const options: CameraOptions = {
+          mediaType: 'photo',
+          cameraType: 'front',
+          quality: 1,
+        };
+
+        const result = await launchCamera(options);
+
+        if (result.assets) {
+          setAvatar(result.assets[0].uri!);
+          setModalVisible(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   console.log('TOKEN: ' + token);
   console.log('ID: ' + id);
@@ -46,7 +101,7 @@ export function Perfil() {
   const menuPerfil = [
     { name: 'Favoritos', icon: 'star', screen: 'Favorite' },
     { name: 'Perfil', icon: 'user', screen: 'UserConfig' },
-    { name: 'Perfil', icon: 'user', screen: 'UserConfig' },
+    { name: 'Configurações', icon: 'gear', screen: 'UserConfig' },
   ];
 
   useEffect(() => {
@@ -71,8 +126,12 @@ export function Perfil() {
         <Container>
           <HeaderArea>
             <UserCard>
-              <UserAvatarArea>
-                <UserAvatar />
+              <UserAvatarArea onPress={() => setModalVisible(true)}>
+                {avatar ? (
+                  <UserAvatar source={{ uri: avatar }} resizeMode="cover" />
+                ) : (
+                  <FontAwesomeIcon name="user" size={35} color="#bcbcbc" />
+                )}
               </UserAvatarArea>
               <UserInfoArea>
                 <UserName>{data.name}</UserName>
@@ -84,19 +143,31 @@ export function Perfil() {
             <MenuArea>
               {menuPerfil.map((item, index) => (
                 <MenuBox key={index}>
-                  <FontAwesome5Icon name={item.icon} size={35} color="#bcbcbc" />
+                  <FontAwesomeIcon name={item.icon} size={35} color="#bcbcbc" />
                   <MenuText>{item.name}</MenuText>
                 </MenuBox>
               ))}
               <MenuBox onPress={handleLogout}>
-                <FontAwesome5Icon name="sign-out-alt" size={35} color="#bcbcbc" />
+                <FontAwesomeIcon name="sign-out" size={35} color="#bcbcbc" />
                 <MenuText>Sair</MenuText>
               </MenuBox>
             </MenuArea>
           </ScrollView>
+          <Modal transparent visible={modalVisible} animationType="fade">
+            <Shadow onPress={() => setModalVisible(false)}>
+              <PhotoInfo>
+                <PhotoOption onPress={launchGalery}>
+                  <PhotoOptionText>Galeria</PhotoOptionText>
+                </PhotoOption>
+                <PhotoOption onPress={launchPhotoByCamera}>
+                  <PhotoOptionText>Camera</PhotoOptionText>
+                </PhotoOption>
+              </PhotoInfo>
+            </Shadow>
+          </Modal>
         </Container>
       )}
-      {!isLoading && (!token || !id) && <GoToLogin />}
+      {!isLoading && (!token || !id || isError) && <GoToLogin />}
       {isLoading && <Loading load={isLoading} />}
     </>
   );
