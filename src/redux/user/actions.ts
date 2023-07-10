@@ -5,6 +5,7 @@ export const loginUser = (payload: object) => ({
   payload,
 });
 
-export const logoutUser = () => ({
-  type: UserActionTypes.LOGOUT,
+export const setLanguage = (payload: object) => ({
+  type: UserActionTypes.SET_LANGUAGE,
+  payload,
 });

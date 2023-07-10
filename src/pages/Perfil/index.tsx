@@ -32,6 +32,7 @@ import {
   CameraOptions,
 } from 'react-native-image-picker';
 import { request, PERMISSIONS } from 'react-native-permissions';
+import { NODE_API } from '../../keys';
 
 export function Perfil() {
   const navigation = useNavigation();
@@ -40,13 +41,17 @@ export function Perfil() {
   const [avatar, setAvatar] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
-  const { data, isLoading, isError } = useQuery(['userInfo', token, id], async () => {
-    if (token && id) {
-      return await nodeApi.getUserInfo(id, token);
-    }
+  const { data, isLoading, isError } = useQuery(
+    ['userInfo', token, id],
+    async () => {
+      if (token && id) {
+        return await nodeApi.getUserInfo(id, token);
+      }
 
-    return null;
-  });
+      return null;
+    },
+    { refetchOnWindowFocus: 'always' }
+  );
   const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
     await AsyncStorage.removeItem('id');
@@ -63,7 +68,15 @@ export function Perfil() {
         const result = await launchImageLibrary(options);
 
         if (result.assets) {
-          setAvatar(result.assets[0].uri!);
+          let fData = new FormData();
+
+          fData.append('avatar', {
+            uri: result.assets[0].uri!,
+            type: 'image/jpg',
+            name: 'photo.jpg',
+          });
+          let res = await nodeApi.changeUserInfo(id, token, fData);
+          setAvatar(res.updated.avatar);
           setModalVisible(false);
           return;
         }
@@ -85,7 +98,15 @@ export function Perfil() {
         const result = await launchCamera(options);
 
         if (result.assets) {
-          setAvatar(result.assets[0].uri!);
+          let fData = new FormData();
+
+          fData.append('avatar', {
+            uri: result.assets[0].uri!,
+            type: 'image/jpg',
+            name: 'photo.jpg',
+          });
+          let res = await nodeApi.changeUserInfo(id, token, fData);
+          setAvatar(res.updated.avatar);
           setModalVisible(false);
           return;
         }
@@ -95,12 +116,9 @@ export function Perfil() {
     }
   };
 
-  console.log('TOKEN: ' + token);
-  console.log('ID: ' + id);
-
   const menuPerfil = [
     { name: 'Favoritos', icon: 'star', screen: 'Favorite' },
-    { name: 'Perfil', icon: 'user', screen: 'UserConfig' },
+    { name: 'Perfil', icon: 'user', screen: 'UserPerfil' },
     { name: 'Configurações', icon: 'gear', screen: 'UserConfig' },
   ];
 
@@ -120,15 +138,19 @@ export function Perfil() {
     getAsyncId();
   }, []);
 
+  useEffect(() => {
+    if (data && data.avatar) setAvatar(data.avatar);
+  }, [data]);
+
   return (
-    <>
+    <Container>
       {!isLoading && token && id && (
-        <Container>
+        <>
           <HeaderArea>
             <UserCard>
               <UserAvatarArea onPress={() => setModalVisible(true)}>
                 {avatar ? (
-                  <UserAvatar source={{ uri: avatar }} resizeMode="cover" />
+                  <UserAvatar source={{ uri: `${NODE_API}/media/${avatar}` }} resizeMode="cover" />
                 ) : (
                   <FontAwesomeIcon name="user" size={35} color="#bcbcbc" />
                 )}
@@ -139,7 +161,7 @@ export function Perfil() {
               </UserInfoArea>
             </UserCard>
           </HeaderArea>
-          <ScrollView style={{ flex: 1 }}>
+          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             <MenuArea>
               {menuPerfil.map((item, index) => (
                 <MenuBox key={index}>
@@ -153,7 +175,12 @@ export function Perfil() {
               </MenuBox>
             </MenuArea>
           </ScrollView>
-          <Modal transparent visible={modalVisible} animationType="fade">
+          <Modal
+            transparent
+            visible={modalVisible}
+            animationType="fade"
+            onRequestClose={() => setModalVisible(false)}
+          >
             <Shadow onPress={() => setModalVisible(false)}>
               <PhotoInfo>
                 <PhotoOption onPress={launchGalery}>
@@ -165,10 +192,10 @@ export function Perfil() {
               </PhotoInfo>
             </Shadow>
           </Modal>
-        </Container>
+        </>
       )}
       {!isLoading && (!token || !id || isError) && <GoToLogin />}
-      {isLoading && <Loading load={isLoading} />}
-    </>
+      {isLoading && <Loading load={isLoading} color="#000" />}
+    </Container>
   );
 }

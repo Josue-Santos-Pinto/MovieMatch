@@ -55,4 +55,17 @@ export default {
       console.error(error);
     }
   },
+  changeUserInfo: async (id: string, token: string, fData: FormData) => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
+      };
+
+      let res = await axios.put(`${NODE_API}/${id}/user`, fData, config);
+      console.log(res.data);
+      return res.data; // A resposta da API
+    } catch (error) {
+      console.error(error);
+    }
+  },
 };

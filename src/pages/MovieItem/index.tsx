@@ -34,6 +34,7 @@ import {
   RelatedMoviesArea,
   RelatedMoviesTitle,
   RelatedMovies,
+  FavoriteMovie,
 } from './styles';
 
 import api from '../../services/api';
@@ -122,6 +123,9 @@ export function MovieItem() {
                 onLoad={() => setLoading(false)}
               />
             </BannerArea>
+            <FavoriteMovie onPress={() => null}>
+              <FontAwesome5Icon name="star-o" size={20} color="#fff" />
+            </FavoriteMovie>
             <MovieInfo>
               <HeaderInfoArea>
                 <TitleArea>
