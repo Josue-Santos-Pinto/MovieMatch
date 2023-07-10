@@ -15,34 +15,45 @@ import {
   DailyMovieImg,
   DailyMovieInfo,
   DailyMovieInfoText,
+  DailyMovieReload,
 } from './styles';
 import { IMG } from '../../keys';
 import { Movie } from '../../models';
 import { useNavigation } from '@react-navigation/native';
 import { Loading } from '../../components/Loading';
-
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 export function Home() {
   const navigation = useNavigation();
   const [randomMovieIndex, setRandomMovieIndex] = useState<number>(0);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
 
   const generateRandomNumbers = () => {
-    return Math.floor(Math.random() * 500);
+    setPage(Math.floor(Math.random() * 500));
   };
 
   const { data, isLoading } = useQuery('trending', async () => {
     return await api.getTrendindMovies();
   });
 
-  const { data: randomMovie } = useQuery<Movie[]>('randomMovie', async () => {
-    return await api.getRandomMovie(generateRandomNumbers());
+  const { data: randomMovie } = useQuery<Movie[]>(['randomMovie', page], async () => {
+    return await api.getRandomMovie(page);
   });
 
-  useEffect(() => {
+  const generateRandomIndex = () => {
     randomMovie
       ? setRandomMovieIndex(Math.floor(Math.random() * randomMovie?.length))
       : setRandomMovieIndex(Math.floor(Math.random() * 20));
+  };
+
+  useEffect(() => {
+    generateRandomNumbers();
+    generateRandomIndex();
   }, []);
+  const newRandomMovie = () => {
+    generateRandomNumbers();
+    generateRandomIndex();
+  };
 
   if (isLoading) {
     return <ActivityIndicator size="large" color="white" />;
@@ -81,6 +92,14 @@ export function Home() {
               <DailyMovieInfoText>Sugestão de filme: </DailyMovieInfoText>
               <DailyMovieInfoText>{randomMovie[randomMovieIndex].title}</DailyMovieInfoText>
             </DailyMovieInfo>
+            <DailyMovieReload onPress={() => newRandomMovie()}>
+              <FontAwesomeIcon name="refresh" size={25} color="#fff" />
+            </DailyMovieReload>
+          </DailyMovie>
+        )}
+        {!randomMovie && (
+          <DailyMovie load={true} style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Loading load={true} color="#fff" />
           </DailyMovie>
         )}
         <TrendingMoviesArea>

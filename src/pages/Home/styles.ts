@@ -47,6 +47,26 @@ export const DailyMovieInfo = styled.View`
   left: 10px;
   min-width: 200px;
   max-width: 90%;
+  min-height: 80px;
+
+  justify-content: center;
+  align-items: center;
+  padding-horizontal: 20px;
+  padding-vertical 10px;
+  /* From https://css.glass */
+  background: rgba(0, 0, 0, 0.39);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4.8px);
+  -webkit-backdrop-filter: blur(4.8px);
+  border: 1px solid rgba(255, 255, 255, 0.23);
+`;
+export const DailyMovieReload = styled.TouchableOpacity`
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  min-width: 80px;
+  max-width: 90%;
   height: 60px;
   justify-content: center;
   align-items: center;
