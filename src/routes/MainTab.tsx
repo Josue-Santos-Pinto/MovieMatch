@@ -1,17 +1,16 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home } from '../pages/Home';
 import { MovieItem } from '../pages/MovieItem';
-import { Search } from '../pages/Search';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Perfil } from '../pages/Perfil';
 import HomeStack from './HomeStack';
 import SearchStack from './SearchStack';
+import PerfilStack from './PerfilStack';
+import { Perfil } from '../pages/Perfil';
 
 export type RootTabProps = {
   HomeStack: undefined;
   SearchStack: undefined;
-  Perfil: undefined;
+  PerfilStack: undefined;
   MovieItem: {
     id: number;
     platform: string;
@@ -23,6 +22,7 @@ const Tab = createBottomTabNavigator<RootTabProps>();
 export default () => {
   return (
     <Tab.Navigator
+      initialRouteName="HomeStack"
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
@@ -56,8 +56,8 @@ export default () => {
         }}
       />
       <Tab.Screen
-        name="Perfil"
-        component={Perfil}
+        name="PerfilStack"
+        component={PerfilStack}
         options={{
           tabBarIcon: ({ color, focused }) => {
             return <Icon name="user" size={25} color={focused ? '#ff8f70' : '#ccc'} />;

@@ -38,7 +38,8 @@ const signUpSchema = yup.object({
   name: yup
     .string()
     .required('O e-mail precisa ser informado')
-    .min(5, 'O nome deve ter pelo menos 5 digitos'),
+    .min(5, 'O nome deve ter pelo menos 5 caracteres')
+    .max(25, 'O nome deve ter no máximo 25 caracteres'),
   email: yup
     .string()
     .required('O e-mail precisa ser informado')
@@ -106,7 +107,12 @@ export function Register() {
               control={control}
               name="name"
               render={({ field: { onChange } }) => (
-                <Input placeholder="Nome" placeholderTextColor="#bcbcbc" onChangeText={onChange} />
+                <Input
+                  placeholder="Nome"
+                  placeholderTextColor="#bcbcbc"
+                  onChangeText={onChange}
+                  maxLength={25}
+                />
               )}
             />
           </InputArea>

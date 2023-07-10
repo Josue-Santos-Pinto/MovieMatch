@@ -34,6 +34,12 @@ import {
 import { request, PERMISSIONS } from 'react-native-permissions';
 import { NODE_API } from '../../keys';
 
+const menuPerfil = [
+  { name: 'Favoritos', icon: 'star', screen: 'Favorites' },
+  { name: 'Perfil', icon: 'user', screen: 'UserPerfil' },
+  { name: 'Configurações', icon: 'gear', screen: 'UserConfig' },
+];
+
 export function Perfil() {
   const navigation = useNavigation();
   const [token, setToken] = useState<string>('');
@@ -116,12 +122,6 @@ export function Perfil() {
     }
   };
 
-  const menuPerfil = [
-    { name: 'Favoritos', icon: 'star', screen: 'Favorite' },
-    { name: 'Perfil', icon: 'user', screen: 'UserPerfil' },
-    { name: 'Configurações', icon: 'gear', screen: 'UserConfig' },
-  ];
-
   useEffect(() => {
     const getAsyncToken = async () => {
       let res = await AsyncStorage.getItem('token');
@@ -164,7 +164,7 @@ export function Perfil() {
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             <MenuArea>
               {menuPerfil.map((item, index) => (
-                <MenuBox key={index}>
+                <MenuBox key={index} onPress={() => navigation.navigate('Favorites')}>
                   <FontAwesomeIcon name={item.icon} size={35} color="#bcbcbc" />
                   <MenuText>{item.name}</MenuText>
                 </MenuBox>

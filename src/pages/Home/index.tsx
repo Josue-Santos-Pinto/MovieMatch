@@ -22,6 +22,7 @@ import { Movie } from '../../models';
 import { useNavigation } from '@react-navigation/native';
 import { Loading } from '../../components/Loading';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+
 export function Home() {
   const navigation = useNavigation();
   const [randomMovieIndex, setRandomMovieIndex] = useState<number>(0);

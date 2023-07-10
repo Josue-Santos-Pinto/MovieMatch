@@ -45,6 +45,7 @@ export const FilterArea = styled.View`
   flex-direction: row;
 `;
 export const ItemArea = styled.TouchableOpacity`
+  width: 50%;
   margin-horizontal: 15px;
   margin-vertical: 10px;
 `;
