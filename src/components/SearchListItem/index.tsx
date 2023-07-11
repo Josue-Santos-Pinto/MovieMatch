@@ -16,6 +16,13 @@ export function SearchListItem({ data, platform }: dataProps) {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
 
+  if (data.image) {
+    data.poster_path = data.image;
+  }
+  if (data.movie_number) {
+    data.id = parseInt(data.movie_number);
+  }
+
   const handleImageSource = () => {
     setIsLoading(false);
   };

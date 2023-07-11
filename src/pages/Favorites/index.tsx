@@ -17,7 +17,7 @@ import {
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import { Movie } from '../../models';
-import { FlatList, Alert } from 'react-native';
+import { FlatList, Alert, RefreshControl } from 'react-native';
 import { ListItem } from '../../components/ListItem';
 import { Loading } from '../../components/Loading';
 import { useNavigation } from '@react-navigation/native';
@@ -25,9 +25,15 @@ import { useQuery } from 'react-query';
 import api from '../../services/api';
 import { SearchListItem } from '../../components/SearchListItem';
 import { Pagination } from '../../components/Pagination';
+import nodeApi from '../../services/nodeApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 export function Favorites() {
-  const [search, setSearch] = useState('');
+  const { id, token } = useSelector((rootReducer: RootState) => rootReducer.userReducer);
+
+  const [fetching, setFetching] = useState(false);
   const [searchedMovie, setSearchedMovie] = useState('');
   const [listPlatform, setListPlatform] = useState('movie');
   const [page, setPage] = useState(1);
@@ -35,10 +41,19 @@ export function Favorites() {
 
   const findItemList = ['Filmes', 'Series'];
 
-  const { data: average, isLoading } = useQuery(['average', page, searchedMovie], async () => {
-    if (searchedMovie.trim() == '') return await api.getFindMovies(page);
-    return null;
-  });
+  const {
+    data: favMovies,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useQuery(
+    ['favMovies', id, token],
+    async () => {
+      if (id && token) return await nodeApi.getFavMovies(id, token);
+      return null;
+    },
+    { refetchOnWindowFocus: 'always', staleTime: Infinity, cacheTime: 0, refetchInterval: 0 }
+  );
 
   const { data: series } = useQuery(['series', page, searchedMovie], async () => {
     if (searchedMovie.trim() == '') return await api.getTvSeries(page);
@@ -50,6 +65,14 @@ export function Favorites() {
     setPage(1);
   };
 
+  const handleRefresh = () => {
+    setFetching(true);
+    refetch();
+  };
+  useEffect(() => {
+    setFetching(isFetching);
+  }, [isFetching]);
+
   useEffect(() => {
     if (currentItem == 'Filmes') {
       setListPlatform('movie');
@@ -57,13 +80,6 @@ export function Favorites() {
       setListPlatform('tv');
     }
   }, [currentItem]);
-
-  useEffect(() => {
-    if (search.trim() === '') {
-      setSearchedMovie('');
-      setPage(1);
-    }
-  }, [search]);
 
   return (
     <Container>
@@ -81,16 +97,14 @@ export function Favorites() {
       </FilterArea>
 
       <MoviesList>
-        {currentItem === 'Filmes' && average && average.results && (
+        {currentItem === 'Filmes' && favMovies && favMovies.movies && (
           <FlatList
-            data={average.results}
+            data={favMovies.movies}
             renderItem={({ item, index }) => <SearchListItem data={item} platform="movie" />}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.movie_number}
             numColumns={2}
             showsVerticalScrollIndicator={false}
-            ListFooterComponent={
-              <Pagination page={page} setPage={setPage} totalPage={average.total_pages} />
-            }
+            refreshControl={<RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />}
           />
         )}
         {currentItem === 'Series' && series && series.results && (

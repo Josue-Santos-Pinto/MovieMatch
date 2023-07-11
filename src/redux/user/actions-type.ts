@@ -1,6 +1,6 @@
 const UserActionTypes = {
-  LOGIN: 'user/login',
-  LOGOUT: 'user/logout',
+  SET_ID: 'user/id',
+  SET_TOKEN: 'user/token',
   SET_LANGUAGE: 'user/language',
 };
 

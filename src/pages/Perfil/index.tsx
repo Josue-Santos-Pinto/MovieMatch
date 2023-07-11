@@ -33,6 +33,8 @@ import {
 } from 'react-native-image-picker';
 import { request, PERMISSIONS } from 'react-native-permissions';
 import { NODE_API } from '../../keys';
+import UserActionTypes from '../../redux/user/actions-type';
+import { RootState } from '../../redux/store';
 
 const menuPerfil = [
   { name: 'Favoritos', icon: 'star', screen: 'Favorites' },
@@ -42,8 +44,8 @@ const menuPerfil = [
 
 export function Perfil() {
   const navigation = useNavigation();
-  const [token, setToken] = useState<string>('');
-  const [id, setId] = useState<string>('');
+  const dispatch = useDispatch();
+  const { id, token } = useSelector((rootReducer: RootState) => rootReducer.userReducer);
   const [avatar, setAvatar] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -123,28 +125,26 @@ export function Perfil() {
   };
 
   useEffect(() => {
-    const getAsyncToken = async () => {
-      let res = await AsyncStorage.getItem('token');
-      if (res) setToken(res);
-    };
-    getAsyncToken();
-  }, []);
-
-  useEffect(() => {
-    const getAsyncId = async () => {
-      let res = await AsyncStorage.getItem('id');
-      if (res) setId(res);
-    };
-    getAsyncId();
-  }, []);
-
-  useEffect(() => {
     if (data && data.avatar) setAvatar(data.avatar);
   }, [data]);
 
+  useEffect(() => {
+    const getAsyncInfo = async () => {
+      let asyncToken = await AsyncStorage.getItem('token');
+      dispatch({ type: UserActionTypes.SET_TOKEN, payload: asyncToken });
+      let asyncId = await AsyncStorage.getItem('id');
+      dispatch({ type: UserActionTypes.SET_ID, payload: asyncId });
+    };
+    getAsyncInfo();
+  }, []);
+
+  useEffect(() => {
+    console.log(id, token);
+  }, [token]);
+
   return (
     <Container>
-      {!isLoading && token && id && (
+      {!isLoading && token && id && data && (
         <>
           <HeaderArea>
             <UserCard>

@@ -7,25 +7,21 @@ type FavType = {
 };
 
 type initialStateType = {
-  userKeys: {
-    id: string;
-    token: string;
-  };
+  id: string;
+  token: string;
 };
 
 const initialState: initialStateType = {
-  userKeys: {
-    id: '',
-    token: '',
-  },
+  id: '',
+  token: '',
 };
 
 const userReducer = (state = initialState, action: any) => {
   switch (action.type) {
-    case UserActionTypes.LOGIN:
-      return { ...state, userKeys: action.payload };
-    case UserActionTypes.LOGOUT:
-      return { ...state, token: null };
+    case UserActionTypes.SET_ID:
+      return { ...state, id: action.payload };
+    case UserActionTypes.SET_TOKEN:
+      return { ...state, token: action.payload };
   }
   return state;
 };

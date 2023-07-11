@@ -48,18 +48,22 @@ import { useQuery } from 'react-query';
 import { ListItem } from '../../components/ListItem';
 import { Loading } from '../../components/Loading';
 import { SerieItem } from '../../components/SerieItem';
+import nodeApi from '../../services/nodeApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
+import rootReducer from '../../redux/root-reducer';
+import { RootState } from '../../redux/store';
 
 export function MovieItem() {
   const route = useRoute<RouteProp<RootTabProps, 'MovieItem'>>();
+  const navigation = useNavigation();
+
+  const { id: userId, token } = useSelector((rootReducer: RootState) => rootReducer.userReducer);
+  const [loading, setLoading] = useState(true);
+  const [favorited, setFavorited] = useState(false);
 
   const id = route.params.id;
   const platform = route.params.platform;
-  const navigation = useNavigation();
-
-  const [flatrateProvider, setFlatrateProvider] = useState<Provider[] | null>(null);
-  const [rentProvider, setRentProvider] = useState<Provider[] | null>(null);
-  const [buyProvider, setBuyProvider] = useState<Provider[] | null>(null);
-  const [loading, setLoading] = useState(true);
 
   const { data: movieDetail, isLoading } = useQuery<Movie>(
     ['movieDetail', id],
@@ -91,7 +95,34 @@ export function MovieItem() {
     return await api.getRelatedMovie(id, platform);
   });
 
-  if (isLoading) return <Loading load={isLoading} />;
+  const isFavorited = async () => {
+    if (userId && token) {
+      let res = await nodeApi.getFavMovies(userId, token);
+      for (let i in res.movies) {
+        console.log(res.movies[i].movie_number == id.toString());
+        if (res.movies[i].movie_number == id.toString()) {
+          setFavorited(true);
+        }
+      }
+    }
+  };
+
+  const favoriteHandle = async () => {
+    if (movieDetail && userId && token) {
+      let data = await nodeApi.postNewFavMovies(
+        userId,
+        token,
+        id.toString(),
+        movieDetail.vote_average,
+        movieDetail.poster_path
+      );
+      if (data.newFavMovie) {
+        setFavorited(true);
+      } else {
+        setFavorited(false);
+      }
+    }
+  };
 
   const formatDate = (data: string) => {
     const date = new Date(data);
@@ -100,6 +131,10 @@ export function MovieItem() {
     let year = date.getFullYear();
     return `${day} de ${month}, ${year}`;
   };
+
+  useEffect(() => {
+    isFavorited();
+  }, [token]);
 
   return (
     <Container>
@@ -123,8 +158,12 @@ export function MovieItem() {
                 onLoad={() => setLoading(false)}
               />
             </BannerArea>
-            <FavoriteMovie onPress={() => null}>
-              <FontAwesome5Icon name="star-o" size={20} color="#fff" />
+            <FavoriteMovie onPress={() => favoriteHandle()}>
+              <FontAwesome5Icon
+                name={favorited ? 'star' : 'star-o'}
+                size={20}
+                color={favorited ? 'yellow' : '#fff'}
+              />
             </FavoriteMovie>
             <MovieInfo>
               <HeaderInfoArea>

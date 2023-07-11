@@ -1,11 +1,11 @@
 import UserActionTypes from './actions-type';
 
-export const loginUser = (payload: object) => ({
-  type: UserActionTypes.LOGIN,
+export const userID = (payload: string) => ({
+  type: UserActionTypes.SET_ID,
   payload,
 });
 
-export const setLanguage = (payload: object) => ({
-  type: UserActionTypes.SET_LANGUAGE,
+export const userToken = (payload: string) => ({
+  type: UserActionTypes.SET_TOKEN,
   payload,
 });

@@ -26,7 +26,6 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch } from 'react-redux';
 import UserActionTypes from '../../redux/user/actions-type';
-import { loginUser } from '../../redux/user/actions';
 import { useEffect, useState } from 'react';
 import { Loading } from '../../components/Loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -68,14 +67,15 @@ export function Login() {
     if (!res.error) {
       if (res.token) {
         await AsyncStorage.setItem('token', res.token);
+
         await AsyncStorage.setItem('id', res.id);
+
         navigation.reset({ index: 1, routes: [{ name: 'MainTab' }] });
         setIsLoading(false);
       }
     } else {
-      console.log(res.error);
       setIsLoading(false);
-      Alert.alert('Ocorreu um erro');
+      Alert.alert(res.error);
     }
   };
 
@@ -102,7 +102,7 @@ export function Login() {
               )}
             />
           </InputArea>
-          {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
+          {errors && errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
         </InputBox>
 
         <InputBox>
@@ -121,7 +121,7 @@ export function Login() {
               )}
             />
           </InputArea>
-          {errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
+          {errors && errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
         </InputBox>
 
         <SubmitButton onPress={handleSubmit(handleLogin)}>
@@ -137,7 +137,12 @@ export function Login() {
           </GoToRegisterButton>
         </NotHaveAccountArea>
       </ScrollView>
-      <Modal visible={isLoading} animationType="fade" transparent={true}>
+      <Modal
+        visible={isLoading}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setIsLoading(false)}
+      >
         <Shadow>
           <LoadingBox>
             <Loading load={isLoading} color="blue" />

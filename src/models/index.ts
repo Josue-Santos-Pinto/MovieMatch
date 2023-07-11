@@ -16,6 +16,8 @@ export type Movie = {
   runtime: string;
   release_date: string;
   genres: Genres[];
+  image?: string;
+  movie_number: string;
 };
 
 export type Serie = {

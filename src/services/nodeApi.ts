@@ -68,4 +68,42 @@ export default {
       console.error(error);
     }
   },
+  getFavMovies: async (id: string, token: string) => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      let res = await axios.get(`${NODE_API}/${id}/favmovies`, config);
+      console.log(res.data);
+      return res.data; // A resposta da API
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  postNewFavMovies: async (
+    id: string,
+    token: string,
+    movie_number: string,
+    vote_average: number,
+    image: string
+  ) => {
+    try {
+      console.log(id, token, movie_number, vote_average, image);
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+      const data = {
+        movie_number,
+        vote_average,
+        image,
+      };
+
+      let res = await axios.post(`${NODE_API}/${id}/favmovie`, qs.stringify(data), config);
+      console.log(res.data);
+      return res.data; // A resposta da API
+    } catch (error) {
+      console.error(error);
+    }
+  },
 };
