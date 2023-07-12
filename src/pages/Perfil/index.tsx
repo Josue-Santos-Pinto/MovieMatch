@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Modal, ScrollView } from 'react-native';
 import {
   Container,
@@ -17,7 +17,7 @@ import {
   UserInfoArea,
   UserName,
 } from './styles';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { GoToLogin } from '../../components/GoToLogin';
 import { useQuery } from 'react-query';
@@ -33,13 +33,18 @@ import {
 } from 'react-native-image-picker';
 import { request, PERMISSIONS } from 'react-native-permissions';
 import { NODE_API } from '../../keys';
-import UserActionTypes from '../../redux/user/actions-type';
 import { RootState } from '../../redux/store';
 
-const menuPerfil = [
+type menuPerfilType = {
+  name: string;
+  icon: string;
+  screen: any;
+};
+
+const menuPerfil: menuPerfilType[] = [
   { name: 'Favoritos', icon: 'star', screen: 'Favorites' },
   { name: 'Perfil', icon: 'user', screen: 'UserPerfil' },
-  { name: 'Configurações', icon: 'gear', screen: 'UserConfig' },
+  //{ name: 'Configurações', icon: 'gear', screen: 'UserConfig' },
 ];
 
 export function Perfil() {
@@ -47,9 +52,10 @@ export function Perfil() {
   const dispatch = useDispatch();
   const { id, token } = useSelector((rootReducer: RootState) => rootReducer.userReducer);
   const [avatar, setAvatar] = useState('');
+  const [fetching, setFetching] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading, isError, isFetching, refetch } = useQuery(
     ['userInfo', token, id],
     async () => {
       if (token && id) {
@@ -58,7 +64,7 @@ export function Perfil() {
 
       return null;
     },
-    { refetchOnWindowFocus: 'always' }
+    { refetchOnWindowFocus: 'always', staleTime: Infinity, cacheTime: 0, refetchInterval: 0 }
   );
   const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
@@ -124,6 +130,12 @@ export function Perfil() {
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [])
+  );
+
   useEffect(() => {
     if (data && data.avatar) setAvatar(data.avatar);
   }, [data]);
@@ -150,7 +162,7 @@ export function Perfil() {
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             <MenuArea>
               {menuPerfil.map((item, index) => (
-                <MenuBox key={index} onPress={() => navigation.navigate('Favorites')}>
+                <MenuBox key={index} onPress={() => navigation.navigate(item.screen)}>
                   <FontAwesomeIcon name={item.icon} size={35} color="#bcbcbc" />
                   <MenuText>{item.name}</MenuText>
                 </MenuBox>

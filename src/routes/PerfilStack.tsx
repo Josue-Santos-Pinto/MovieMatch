@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { MovieItem } from '../pages/MovieItem';
 import { Perfil } from '../pages/Perfil';
 import { Favorites } from '../pages/Favorites';
+import { UserPerfil } from '../pages/UserPerfil';
 
 export type RootPerfilStackProps = {
   Perfil: undefined;
@@ -11,7 +12,7 @@ export type RootPerfilStackProps = {
     id: number;
     platform: string;
   };
-  //UserPerfil: undefined;
+  UserPerfil: undefined;
   //Configs: undefined;
 };
 
@@ -23,6 +24,7 @@ export default () => {
       <Stack.Screen name="Perfil" component={Perfil} />
       <Stack.Screen name="Favorites" component={Favorites} />
       <Stack.Screen name="MovieItem" component={MovieItem} />
+      <Stack.Screen name="UserPerfil" component={UserPerfil} />
     </Stack.Navigator>
   );
 };
