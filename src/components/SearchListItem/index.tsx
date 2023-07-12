@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Item, ItemImg, StarsArea, StarsText } from './styles';
-import { Movie } from '../../models';
+import { Movie, Serie } from '../../models';
 import { IMG } from '../../keys';
 import { useNavigation } from '@react-navigation/native';
 import api from '../../services/api';
@@ -21,6 +21,9 @@ export function SearchListItem({ data, platform }: dataProps) {
   }
   if (data.movie_number) {
     data.id = parseInt(data.movie_number);
+  }
+  if (data.serie_number) {
+    data.id = parseInt(data.serie_number);
   }
 
   const handleImageSource = () => {

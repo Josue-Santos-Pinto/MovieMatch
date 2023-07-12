@@ -63,7 +63,6 @@ export function Login() {
   const handleLogin = async (data: FormDataType) => {
     setIsLoading(true);
     let res = await nodeApi.login(data.email.toLowerCase(), data.password);
-    console.log(res);
     if (!res.error) {
       if (res.token) {
         await AsyncStorage.setItem('token', res.token);

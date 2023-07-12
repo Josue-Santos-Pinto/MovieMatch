@@ -22,9 +22,15 @@ import { Movie } from '../../models';
 import { useNavigation } from '@react-navigation/native';
 import { Loading } from '../../components/Loading';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import UserActionTypes from '../../redux/user/actions-type';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 export function Home() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const { id, token } = useSelector((rootReducer: RootState) => rootReducer.userReducer);
   const [randomMovieIndex, setRandomMovieIndex] = useState<number>(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -55,6 +61,15 @@ export function Home() {
     generateRandomNumbers();
     generateRandomIndex();
   };
+  useEffect(() => {
+    const getAsyncInfo = async () => {
+      let asyncToken = await AsyncStorage.getItem('token');
+      dispatch({ type: UserActionTypes.SET_TOKEN, payload: asyncToken });
+      let asyncId = await AsyncStorage.getItem('id');
+      dispatch({ type: UserActionTypes.SET_ID, payload: asyncId });
+    };
+    getAsyncInfo();
+  }, []);
 
   if (isLoading) {
     return <ActivityIndicator size="large" color="white" />;

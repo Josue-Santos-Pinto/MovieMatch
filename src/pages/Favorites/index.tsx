@@ -34,9 +34,9 @@ export function Favorites() {
   const { id, token } = useSelector((rootReducer: RootState) => rootReducer.userReducer);
 
   const [fetching, setFetching] = useState(false);
+  const [fetchingSeries, setFetchingSeries] = useState(false);
   const [searchedMovie, setSearchedMovie] = useState('');
   const [listPlatform, setListPlatform] = useState('movie');
-  const [page, setPage] = useState(1);
   const [currentItem, setCurrentItem] = useState('Filmes');
 
   const findItemList = ['Filmes', 'Series'];
@@ -47,31 +47,44 @@ export function Favorites() {
     isFetching,
     refetch,
   } = useQuery(
-    ['favMovies', id, token],
+    ['favMovies', id, token, currentItem],
     async () => {
-      if (id && token) return await nodeApi.getFavMovies(id, token);
+      if (id && token && currentItem == 'Filmes') return await nodeApi.getFavMovies(id, token);
       return null;
     },
     { refetchOnWindowFocus: 'always', staleTime: Infinity, cacheTime: 0, refetchInterval: 0 }
   );
 
-  const { data: series } = useQuery(['series', page, searchedMovie], async () => {
-    if (searchedMovie.trim() == '') return await api.getTvSeries(page);
-    return null;
-  });
-
-  const changeCurrentFilterAndPage = (item: string) => {
-    setCurrentItem(item);
-    setPage(1);
-  };
+  const {
+    data: favSeries,
+    isLoading: isLoadingSeries,
+    isFetching: isFetchingSeries,
+    refetch: refetchSeries,
+  } = useQuery(
+    ['favSeries', id, token, currentItem],
+    async () => {
+      if (id && token && currentItem == 'Series') return await nodeApi.getFavSeries(id, token);
+      return null;
+    },
+    { refetchOnWindowFocus: 'always', staleTime: Infinity, cacheTime: 0, refetchInterval: 0 }
+  );
 
   const handleRefresh = () => {
     setFetching(true);
     refetch();
   };
+  const handleRefreshSeries = () => {
+    setFetchingSeries(true);
+    refetchSeries();
+  };
+
   useEffect(() => {
     setFetching(isFetching);
   }, [isFetching]);
+
+  useEffect(() => {
+    setFetchingSeries(isFetchingSeries);
+  }, [isFetchingSeries]);
 
   useEffect(() => {
     if (currentItem == 'Filmes') {
@@ -89,7 +102,7 @@ export function Favorites() {
 
       <FilterArea>
         {findItemList.map((item, index) => (
-          <ItemArea key={index} onPress={() => changeCurrentFilterAndPage(item)}>
+          <ItemArea key={index} onPress={() => setCurrentItem(item)}>
             <ItemName isActive={item === currentItem}>{item}</ItemName>
             {item === currentItem && <ItemBar />}
           </ItemArea>
@@ -107,15 +120,15 @@ export function Favorites() {
             refreshControl={<RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />}
           />
         )}
-        {currentItem === 'Series' && series && series.results && (
+        {currentItem === 'Series' && favSeries && favSeries.series && (
           <FlatList
-            data={series.results}
+            data={favSeries.series}
             renderItem={({ item, index }) => <SearchListItem data={item} platform="tv" />}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.serie_number}
             numColumns={2}
             showsVerticalScrollIndicator={false}
-            ListFooterComponent={
-              <Pagination page={page} setPage={setPage} totalPage={series.total_pages} />
+            refreshControl={
+              <RefreshControl refreshing={isLoadingSeries} onRefresh={handleRefreshSeries} />
             }
           />
         )}

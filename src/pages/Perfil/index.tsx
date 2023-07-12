@@ -128,20 +128,6 @@ export function Perfil() {
     if (data && data.avatar) setAvatar(data.avatar);
   }, [data]);
 
-  useEffect(() => {
-    const getAsyncInfo = async () => {
-      let asyncToken = await AsyncStorage.getItem('token');
-      dispatch({ type: UserActionTypes.SET_TOKEN, payload: asyncToken });
-      let asyncId = await AsyncStorage.getItem('id');
-      dispatch({ type: UserActionTypes.SET_ID, payload: asyncId });
-    };
-    getAsyncInfo();
-  }, []);
-
-  useEffect(() => {
-    console.log(id, token);
-  }, [token]);
-
   return (
     <Container>
       {!isLoading && token && id && data && (

@@ -99,7 +99,6 @@ export function MovieItem() {
     if (userId && token) {
       let res = await nodeApi.getFavMovies(userId, token);
       for (let i in res.movies) {
-        console.log(res.movies[i].movie_number == id.toString());
         if (res.movies[i].movie_number == id.toString()) {
           setFavorited(true);
         }
@@ -158,13 +157,15 @@ export function MovieItem() {
                 onLoad={() => setLoading(false)}
               />
             </BannerArea>
-            <FavoriteMovie onPress={() => favoriteHandle()}>
-              <FontAwesome5Icon
-                name={favorited ? 'star' : 'star-o'}
-                size={20}
-                color={favorited ? 'yellow' : '#fff'}
-              />
-            </FavoriteMovie>
+            {userId && token && (
+              <FavoriteMovie onPress={() => favoriteHandle()}>
+                <FontAwesome5Icon
+                  name={favorited ? 'star' : 'star-o'}
+                  size={20}
+                  color={favorited ? 'yellow' : '#fff'}
+                />
+              </FavoriteMovie>
+            )}
             <MovieInfo>
               <HeaderInfoArea>
                 <TitleArea>

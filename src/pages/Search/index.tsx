@@ -75,7 +75,6 @@ export function Search() {
       setListPlatform('tv');
     }
   }, [currentItem]);
-  if (list) console.log(list);
 
   useEffect(() => {
     if (search.trim() === '') {

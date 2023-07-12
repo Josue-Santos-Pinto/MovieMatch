@@ -36,6 +36,7 @@ import {
   RelatedMovies,
   InProduction,
   SerieInfo,
+  FavoriteMovie,
 } from './styles';
 
 import api from '../../services/api';
@@ -48,9 +49,14 @@ import { RootTabProps } from '../../routes/MainTab';
 import { useQuery } from 'react-query';
 import { ListItem } from '../ListItem';
 import { Loading } from '../Loading';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import nodeApi from '../../services/nodeApi';
 
 export function SerieItem() {
   const route = useRoute<RouteProp<RootTabProps, 'MovieItem'>>();
+
+  const { id: userId, token } = useSelector((rootReducer: RootState) => rootReducer.userReducer);
 
   const id = route.params.id;
   const platform = route.params.platform;
@@ -60,6 +66,7 @@ export function SerieItem() {
   const [rentProvider, setRentProvider] = useState<Provider[] | null>(null);
   const [buyProvider, setBuyProvider] = useState<Provider[] | null>(null);
   const [loading, setLoading] = useState(false);
+  const [favorited, setFavorited] = useState(false);
 
   const { data: serieDetail, isLoading } = useQuery<Serie>(
     ['serieDetail', id],
@@ -74,8 +81,6 @@ export function SerieItem() {
     }
   );
 
-  console.log(serieDetail);
-
   const { data: relatedMovie } = useQuery(['relatedMovie', id], async () => {
     return await api.getRelatedMovie(id, platform);
   });
@@ -89,6 +94,37 @@ export function SerieItem() {
     let year = date.getFullYear();
     return `${day} de ${month}, ${year}`;
   };
+
+  const isFavorited = async () => {
+    if (userId && token) {
+      let res = await nodeApi.getFavSeries(userId, token);
+      for (let i in res.series) {
+        if (res.series[i].serie_number == id.toString()) {
+          setFavorited(true);
+        }
+      }
+    }
+  };
+
+  const favoriteHandle = async () => {
+    if (serieDetail && userId && token) {
+      let data = await nodeApi.postNewFavSeries(
+        userId,
+        token,
+        id.toString(),
+        serieDetail.vote_average,
+        serieDetail.poster_path
+      );
+      if (data.newFavSeries) {
+        setFavorited(true);
+      } else {
+        setFavorited(false);
+      }
+    }
+  };
+  useEffect(() => {
+    isFavorited();
+  }, [token]);
 
   return (
     <Container>
@@ -112,6 +148,15 @@ export function SerieItem() {
                 resizeMode="cover"
               />
             </BannerArea>
+            {userId && token && (
+              <FavoriteMovie onPress={() => favoriteHandle()}>
+                <FontAwesome5Icon
+                  name={favorited ? 'star' : 'star-o'}
+                  size={20}
+                  color={favorited ? 'yellow' : '#fff'}
+                />
+              </FavoriteMovie>
+            )}
             <MovieInfo>
               <HeaderInfoArea>
                 <TitleArea>
