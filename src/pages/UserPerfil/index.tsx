@@ -42,7 +42,6 @@ type FormDataType = {
 const signUpSchema = yup.object({
   name: yup
     .string()
-    .required('O e-mail precisa ser informado')
     .min(5, 'O nome deve ter pelo menos 5 caracteres')
     .max(25, 'O nome deve ter no máximo 25 caracteres'),
 });
@@ -54,15 +53,13 @@ export function UserPerfil() {
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormDataType>({
-    resolver: yupResolver(signUpSchema),
-  });
+  const fData = new FormData();
 
-  const { data, isLoading, isError } = useQuery(
+  const {
+    data: user,
+    isLoading,
+    isError,
+  } = useQuery(
     ['userInfo', token, id],
     async () => {
       if (token && id) {
@@ -74,13 +71,38 @@ export function UserPerfil() {
     { refetchOnWindowFocus: 'always', staleTime: Infinity, cacheTime: 0, refetchInterval: 0 }
   );
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataType>({
+    resolver: yupResolver(signUpSchema),
+    defaultValues: {
+      name: user.name,
+    },
+  });
+
   const handleUpdateUser = async (data: FormDataType) => {
     setLoading(true);
-    let fData = new FormData();
-    fData.append('name', data.name);
-    await nodeApi.changeUserInfo(id, token, fData);
-    navigation.navigate('Perfil');
-    setLoading(false);
+
+    if (avatar) {
+      fData.append('avatar', {
+        uri: avatar,
+        type: 'image/jpg',
+        name: 'photo.jpg',
+      });
+      let res = await nodeApi.changeUserInfo(id, token, fData);
+      console.log(res);
+      navigation.navigate('Perfil');
+      setLoading(false);
+    }
+    if (data.name != user.name) {
+      fData.append('name', data.name);
+      let res = await nodeApi.changeUserInfo(id, token, fData);
+      console.log(res);
+      navigation.navigate('Perfil');
+      setLoading(false);
+    }
   };
 
   const launchGalery = async () => {
@@ -94,17 +116,9 @@ export function UserPerfil() {
         const result = await launchImageLibrary(options);
 
         if (result.assets) {
-          let fData = new FormData();
-
-          fData.append('avatar', {
-            uri: result.assets[0].uri!,
-            type: 'image/jpg',
-            name: 'photo.jpg',
-          });
-          let res = await nodeApi.changeUserInfo(id, token, fData);
-          setAvatar(res.updated.avatar);
+          setAvatar(result.assets[0].uri!);
           setModalVisible(false);
-          return;
+          return fData;
         }
       }
     } catch (err) {
@@ -125,14 +139,13 @@ export function UserPerfil() {
 
         if (result.assets) {
           let fData = new FormData();
-
           fData.append('avatar', {
             uri: result.assets[0].uri!,
             type: 'image/jpg',
             name: 'photo.jpg',
           });
-          let res = await nodeApi.changeUserInfo(id, token, fData);
-          setAvatar(res.updated.avatar);
+          await nodeApi.changeUserInfo(id, token, fData);
+          setAvatar(result.assets[0].uri!);
           setModalVisible(false);
           return;
         }
@@ -142,20 +155,17 @@ export function UserPerfil() {
     }
   };
 
-  useEffect(() => {
-    console.log(data);
-  }, [data.name]);
-
-  useEffect(() => {
-    if (data && data.avatar) setAvatar(data.avatar);
-  }, [data]);
-
   return (
     <Container>
       <HeaderArea>
         <AvatarArea>
-          {avatar ? (
-            <Avatar source={{ uri: `${NODE_API}/media/${avatar}` }} resizeMode="cover" />
+          {user && user.avatar ? (
+            <Avatar
+              source={{
+                uri: avatar ? avatar : `${NODE_API}/media/${user.avatar}`,
+              }}
+              resizeMode="cover"
+            />
           ) : (
             <FontAwesomeIcon name="user" size={90} color="#bcbcbc" />
           )}
@@ -170,12 +180,14 @@ export function UserPerfil() {
           <Controller
             control={control}
             name="name"
-            render={({ field: { onChange } }) => (
+            defaultValue={'Joao'}
+            render={({ field: { onChange, value } }) => (
               <Input
                 placeholder="Nome"
                 placeholderTextColor="#bcbcbc"
                 onChangeText={onChange}
                 maxLength={25}
+                value={value}
               />
             )}
           />
@@ -185,13 +197,14 @@ export function UserPerfil() {
       <InputBox>
         <InputArea>
           <FontAwesomeIcon name="envelope" size={25} color="#bcbcbc" />
-          <Input value={data.email} editable={false} style={{ color: '#bcbcbc' }} />
+          <Input value={user.email} editable={false} style={{ color: '#bcbcbc' }} />
         </InputArea>
       </InputBox>
-
-      <SubmitButton onPress={handleSubmit(handleUpdateUser)}>
-        <SubmitButtonText>Salvar</SubmitButtonText>
-      </SubmitButton>
+      {fData && (
+        <SubmitButton onPress={handleSubmit(handleUpdateUser)}>
+          <SubmitButtonText>Salvar</SubmitButtonText>
+        </SubmitButton>
+      )}
 
       <Modal
         transparent

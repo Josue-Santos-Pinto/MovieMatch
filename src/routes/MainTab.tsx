@@ -62,6 +62,7 @@ export default () => {
           tabBarIcon: ({ color, focused }) => {
             return <Icon name="user" size={25} color={focused ? '#ff8f70' : '#ccc'} />;
           },
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen name="MovieItem" component={MovieItem} options={{ tabBarButton: () => null }} />

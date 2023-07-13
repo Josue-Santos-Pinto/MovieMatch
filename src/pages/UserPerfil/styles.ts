@@ -24,6 +24,7 @@ export const AvatarArea = styled.View`
   background-color: #eee;
   justify-content: center;
   align-items: center;
+  z-index: 1;
 `;
 export const ChangePhotoArea = styled.TouchableOpacity`
   width: 60px;
@@ -40,6 +41,7 @@ export const ChangePhotoArea = styled.TouchableOpacity`
 export const Avatar = styled.Image`
   width: 100%;
   height: 100%;
+  border-radius: 90px;
 `;
 export const InputBox = styled.View`
   width: 80%;

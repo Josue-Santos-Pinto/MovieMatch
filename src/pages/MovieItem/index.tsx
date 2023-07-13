@@ -219,21 +219,19 @@ export function MovieItem() {
                 )}
               </DescArea>
 
-              {relatedMovie && (
+              {relatedMovie && relatedMovie.results && relatedMovie.results.length > 0 && (
                 <RelatedMoviesArea>
                   <RelatedMoviesTitle>Assista também:</RelatedMoviesTitle>
                   <RelatedMovies>
-                    {relatedMovie && relatedMovie.results && relatedMovie.results.length > 0 && (
-                      <FlatList
-                        data={relatedMovie.results}
-                        renderItem={({ item, index }) => (
-                          <ListItem data={item} size="small" platform="movie" />
-                        )}
-                        keyExtractor={(item) => item.id.toString()}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                      />
-                    )}
+                    <FlatList
+                      data={relatedMovie.results}
+                      renderItem={({ item, index }) => (
+                        <ListItem data={item} size="small" platform="movie" />
+                      )}
+                      keyExtractor={(item) => item.id.toString()}
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                    />
                   </RelatedMovies>
                 </RelatedMoviesArea>
               )}

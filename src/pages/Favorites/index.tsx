@@ -29,6 +29,7 @@ import nodeApi from '../../services/nodeApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { EmptyList } from '../../components/EmptyList';
 
 export function Favorites() {
   const { id, token } = useSelector((rootReducer: RootState) => rootReducer.userReducer);
@@ -94,6 +95,11 @@ export function Favorites() {
     }
   }, [currentItem]);
 
+  useEffect(() => {
+    handleRefresh();
+    handleRefreshSeries();
+  }, []);
+
   return (
     <Container>
       <HeaderArea>
@@ -110,7 +116,8 @@ export function Favorites() {
       </FilterArea>
 
       <MoviesList>
-        {currentItem === 'Filmes' && favMovies && favMovies.movies && (
+        {favMovies && favMovies.movies.length == 0 && <EmptyList />}
+        {currentItem === 'Filmes' && favMovies && favMovies.movies.length > 0 && (
           <FlatList
             data={favMovies.movies}
             renderItem={({ item, index }) => <SearchListItem data={item} platform="movie" />}
@@ -120,7 +127,8 @@ export function Favorites() {
             refreshControl={<RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />}
           />
         )}
-        {currentItem === 'Series' && favSeries && favSeries.series && (
+        {favSeries && favSeries.series.length == 0 && <EmptyList />}
+        {currentItem === 'Series' && favSeries && favSeries.series.length > 0 && (
           <FlatList
             data={favSeries.series}
             renderItem={({ item, index }) => <SearchListItem data={item} platform="tv" />}

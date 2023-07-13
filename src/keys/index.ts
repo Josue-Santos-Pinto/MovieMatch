@@ -8,4 +8,6 @@ export const IMG = 'https://image.tmdb.org/t/p/w500/';
 
 // NODE BACKEND
 
-export const NODE_API = 'https://moviematch-backend-ft5vdph6q-josue-santos-pinto.vercel.app';
+//export const NODE_API = 'https://moviematch-backend-ft5vdph6q-josue-santos-pinto.vercel.app';
+
+export const NODE_API = 'http://192.168.1.100:3000';
