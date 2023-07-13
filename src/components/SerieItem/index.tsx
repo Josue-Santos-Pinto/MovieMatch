@@ -132,7 +132,7 @@ export function SerieItem() {
   useEffect(() => {
     isFavorited();
   }, [token]);
-  console.log(serieProviders?.PT.flatrate);
+
   return (
     <Container>
       <Scroller showsVerticalScrollIndicator={false}>

@@ -94,12 +94,12 @@ export function UserPerfil() {
       let res = await nodeApi.changeUserInfo(id, token, fData);
       console.log(res);
       navigation.navigate('Perfil');
+      setAvatar('');
       setLoading(false);
     }
     if (data.name != user.name) {
       fData.append('name', data.name);
       let res = await nodeApi.changeUserInfo(id, token, fData);
-      console.log(res);
       navigation.navigate('Perfil');
       setLoading(false);
     }
@@ -138,6 +138,7 @@ export function UserPerfil() {
         const result = await launchCamera(options);
 
         if (result.assets) {
+          console.log(result.assets);
           setAvatar(result.assets[0].uri!);
           setModalVisible(false);
           return;
@@ -154,22 +155,23 @@ export function UserPerfil() {
         <AvatarArea>
           {user && (
             <>
+              {user.avatar && !avatar && (
+                <Avatar
+                  source={{
+                    uri: `${NODE_API}/media/${user.avatar}`,
+                  }}
+                  resizeMode="cover"
+                />
+              )}
               {avatar != '' && (
                 <Avatar
                   source={{
-                    uri: avatar ? avatar : `${NODE_API}/media/${user.avatar}`,
+                    uri: avatar,
                   }}
                   resizeMode="cover"
                 />
               )}
-              {user.avatar && (
-                <Avatar
-                  source={{
-                    uri: avatar ? avatar : `${NODE_API}/media/${user.avatar}`,
-                  }}
-                  resizeMode="cover"
-                />
-              )}
+
               {!avatar && !user.avatar && <FontAwesomeIcon name="user" size={90} color="#bcbcbc" />}
             </>
           )}

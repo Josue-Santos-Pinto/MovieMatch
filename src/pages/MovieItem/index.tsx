@@ -145,8 +145,6 @@ export function MovieItem() {
     isFavorited();
   }, [token]);
 
-  console.log(movieProviders?.PT);
-
   return (
     <Container>
       <Scroller showsVerticalScrollIndicator={false}>
