@@ -67,7 +67,6 @@ export const MoviesList = styled.View`
 export const NotFoundArea = styled.View`
   flex: 1;
   min-height: 300px;
-  margin-top: -200px;
   justify-content: center;
   align-items: center;
 `;

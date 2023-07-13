@@ -32,7 +32,7 @@ export function Search() {
   const [page, setPage] = useState(1);
   const [currentItem, setCurrentItem] = useState('Filmes');
 
-  const findItemList = ['Filmes', 'Series', 'Documentários'];
+  const findItemList = ['Filmes', 'Séries', 'Documentários'];
 
   const { data: average, isLoading } = useQuery(['average', page, searchedMovie], async () => {
     if (searchedMovie.trim() == '') return await api.getFindMovies(page);
@@ -71,7 +71,7 @@ export function Search() {
   useEffect(() => {
     if (currentItem == 'Filmes') {
       setListPlatform('movie');
-    } else if (currentItem == 'Series') {
+    } else if (currentItem == 'Séries') {
       setListPlatform('tv');
     }
   }, [currentItem]);
@@ -86,7 +86,7 @@ export function Search() {
   return (
     <Container>
       <HeaderArea>
-        <HeaderTitle>Encontre filmes, series {'\n'}e mais...</HeaderTitle>
+        <HeaderTitle>Encontre filmes, séries {'\n'}e mais...</HeaderTitle>
       </HeaderArea>
 
       <SearchArea>
@@ -136,7 +136,7 @@ export function Search() {
             }
           />
         )}
-        {!list && currentItem === 'Series' && series && series.results && (
+        {!list && currentItem === 'Séries' && series && series.results && (
           <FlatList
             data={series.results}
             renderItem={({ item, index }) => <SearchListItem data={item} platform="tv" />}
@@ -178,7 +178,9 @@ export function Search() {
 
         {list && list.results.length == 0 && (
           <NotFoundArea>
-            <NotFoundText>Filme não encontrado</NotFoundText>
+            <NotFoundText>
+              {currentItem == 'Filmes' ? 'Filme não encontrado' : 'Série não encontrada'}
+            </NotFoundText>
           </NotFoundArea>
         )}
       </MoviesList>

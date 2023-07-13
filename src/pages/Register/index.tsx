@@ -33,17 +33,28 @@ type FormDataType = {
   password: string;
   password_confirm: string;
 };
+const emailRegex = /^[\w.-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
 
 const signUpSchema = yup.object({
   name: yup
     .string()
-    .required('O e-mail precisa ser informado')
+    .required('O nome precisa ser informado')
     .min(5, 'O nome deve ter pelo menos 5 caracteres')
-    .max(25, 'O nome deve ter no máximo 25 caracteres'),
+    .max(25, 'O nome deve ter no máximo 25 caracteres')
+    .transform((name) => {
+      return name
+        .trim()
+        .split(' ')
+        .map((word: string) => {
+          return word[0].toLocaleUpperCase().concat(word.substring(1));
+        })
+        .join(' ');
+    }),
   email: yup
     .string()
-    .required('O e-mail precisa ser informado')
-    .email('Formato de e-mail inválido'),
+    .matches(emailRegex, 'Formato de e-mail inválido')
+    .email('Formato de e-mail inválido')
+    .required('O e-mail precisa ser informado'),
   password: yup
     .string()
     .required('Informe a senha')
@@ -83,7 +94,7 @@ export function Register() {
     } else {
       console.log(res.error);
       setIsLoading(false);
-      Alert.alert('Ocorreu um erro');
+      Alert.alert(res.error);
     }
   };
 
@@ -179,7 +190,7 @@ export function Register() {
 
         <NotHaveAccountArea>
           <NotHaveAccountText>Já possui uma conta? </NotHaveAccountText>
-          <GoToRegisterButton onPress={() => navigation.navigate('Register')}>
+          <GoToRegisterButton onPress={() => navigation.navigate('Login')}>
             <NotHaveAccountText style={{ fontSize: 15, color: '#fff', fontFamily: 'Lato-Bold' }}>
               Fazer Login
             </NotHaveAccountText>

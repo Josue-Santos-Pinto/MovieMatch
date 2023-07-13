@@ -161,6 +161,7 @@ export const ProviderArea = styled.View`
   width: 100%;
 `;
 export const ProviderText = styled.Text`
+  font-family: Lato-Bold;
   font-size: 18px;
   color: #fff;
 `;
