@@ -118,7 +118,7 @@ export function UserPerfil() {
         if (result.assets) {
           setAvatar(result.assets[0].uri!);
           setModalVisible(false);
-          return fData;
+          return;
         }
       }
     } catch (err) {
@@ -138,13 +138,6 @@ export function UserPerfil() {
         const result = await launchCamera(options);
 
         if (result.assets) {
-          let fData = new FormData();
-          fData.append('avatar', {
-            uri: result.assets[0].uri!,
-            type: 'image/jpg',
-            name: 'photo.jpg',
-          });
-          await nodeApi.changeUserInfo(id, token, fData);
           setAvatar(result.assets[0].uri!);
           setModalVisible(false);
           return;
@@ -159,16 +152,28 @@ export function UserPerfil() {
     <Container>
       <HeaderArea>
         <AvatarArea>
-          {user && user.avatar ? (
-            <Avatar
-              source={{
-                uri: avatar ? avatar : `${NODE_API}/media/${user.avatar}`,
-              }}
-              resizeMode="cover"
-            />
-          ) : (
-            <FontAwesomeIcon name="user" size={90} color="#bcbcbc" />
+          {user && (
+            <>
+              {avatar != '' && (
+                <Avatar
+                  source={{
+                    uri: avatar ? avatar : `${NODE_API}/media/${user.avatar}`,
+                  }}
+                  resizeMode="cover"
+                />
+              )}
+              {user.avatar && (
+                <Avatar
+                  source={{
+                    uri: avatar ? avatar : `${NODE_API}/media/${user.avatar}`,
+                  }}
+                  resizeMode="cover"
+                />
+              )}
+              {!avatar && !user.avatar && <FontAwesomeIcon name="user" size={90} color="#bcbcbc" />}
+            </>
           )}
+
           <ChangePhotoArea onPress={() => setModalVisible(true)}>
             <FontAwesomeIcon name="camera" size={30} color="#000" />
           </ChangePhotoArea>
