@@ -9,11 +9,7 @@ import {
   TitleArea,
   DescArea,
   DescText,
-  WhereWatchArea,
-  WhereWatchText,
   ProviderArea,
-  ProviderImg,
-  ProviderImgArea,
   ProviderText,
   BackButton,
   MovieInfo,
@@ -35,6 +31,8 @@ import {
   RelatedMoviesTitle,
   RelatedMovies,
   FavoriteMovie,
+  ProviderItemArea,
+  ProviderItemTitle,
 } from './styles';
 
 import api from '../../services/api';
@@ -49,10 +47,9 @@ import { ListItem } from '../../components/ListItem';
 import { Loading } from '../../components/Loading';
 import { SerieItem } from '../../components/SerieItem';
 import nodeApi from '../../services/nodeApi';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector } from 'react-redux';
-import rootReducer from '../../redux/root-reducer';
 import { RootState } from '../../redux/store';
+import { ProviderItem } from '../../components/ProviderItem';
 
 export function MovieItem() {
   const route = useRoute<RouteProp<RootTabProps, 'MovieItem'>>();
@@ -70,6 +67,19 @@ export function MovieItem() {
     async () => {
       if (platform === 'movie') {
         return await api.getMovieDetail(id, platform);
+      }
+      return null;
+    },
+    {
+      enabled: platform === 'movie',
+    }
+  );
+
+  const { data: movieProviders } = useQuery<Provider>(
+    ['moviePlatform', id, platform],
+    async () => {
+      if (platform === 'movie') {
+        return await api.getProviders(id, platform);
       }
       return null;
     },
@@ -134,6 +144,8 @@ export function MovieItem() {
   useEffect(() => {
     isFavorited();
   }, [token]);
+
+  console.log(movieProviders?.PT);
 
   return (
     <Container>
@@ -218,6 +230,44 @@ export function MovieItem() {
                   <MaterialCommunityIcons name="movie-off" size={40} color="#fff" />
                 )}
               </DescArea>
+
+              {movieProviders && movieProviders.PT && (
+                <>
+                  <ProviderArea>
+                    <ProviderText>Onde assistir</ProviderText>
+                  </ProviderArea>
+                  {movieProviders.PT.buy && (
+                    <>
+                      <ProviderItemTitle>Comprar</ProviderItemTitle>
+                      <ProviderItemArea>
+                        {movieProviders.PT.buy.map((item, index) => (
+                          <ProviderItem data={item} key={index} />
+                        ))}
+                      </ProviderItemArea>
+                    </>
+                  )}
+                  {movieProviders.PT.rent && (
+                    <>
+                      <ProviderItemTitle>Alugar</ProviderItemTitle>
+                      <ProviderItemArea>
+                        {movieProviders.PT.rent.map((item, index) => (
+                          <ProviderItem data={item} key={index} />
+                        ))}
+                      </ProviderItemArea>
+                    </>
+                  )}
+                  {movieProviders.PT.flatrate && (
+                    <>
+                      <ProviderItemTitle>Streaming</ProviderItemTitle>
+                      <ProviderItemArea>
+                        {movieProviders.PT.flatrate.map((item, index) => (
+                          <ProviderItem data={item} key={index} />
+                        ))}
+                      </ProviderItemArea>
+                    </>
+                  )}
+                </>
+              )}
 
               {relatedMovie && relatedMovie.results && relatedMovie.results.length > 0 && (
                 <RelatedMoviesArea>

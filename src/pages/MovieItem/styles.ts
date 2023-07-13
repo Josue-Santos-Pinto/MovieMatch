@@ -145,6 +145,7 @@ export const DescText = styled.Text`
 
 export const RelatedMoviesArea = styled.View`
   flex: 1;
+  margin-top: 10px;
 `;
 export const RelatedMoviesTitle = styled.Text`
   font-size: 16px;
@@ -155,39 +156,27 @@ export const RelatedMoviesTitle = styled.Text`
 export const RelatedMovies = styled.View`
   flex: 1;
 `;
-export const WhereWatchArea = styled.View`
-  min-height: 100px;
-  width: 100%;
-  padding: 20px;
-  align-items: center;
-`;
-export const WhereWatchText = styled.Text`
-  color: #fff;
-  font-size: 25px;
-  font-weight: bold;
-`;
+
 export const ProviderArea = styled.View`
   width: 100%;
-  height: 100px;
-  margin-vertical: 20px;
 `;
 export const ProviderText = styled.Text`
   font-size: 18px;
   color: #fff;
 `;
-export const ProviderImgArea = styled.View`
-  width: 80px;
-  height: 80px;
-  border-radius: 50px;
-  overflow: hidden;
-  justify-content: center;
-  align-items: center;
+export const ProviderItemArea = styled.View`
+  width: 100%;
+  min-height: 60px;
+  margin-vertical: 20px;
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
+export const ProviderItemTitle = styled.Text`
+  margin-top: 10px;
+  font-size: 14px;
+  color: #bcbcbc;
 `;
 
-export const ProviderImg = styled.Image`
-  width: 60px;
-  height: 60px;
-`;
 export const BackButton = styled.TouchableOpacity`
   width: 80px;
   height: 80px;

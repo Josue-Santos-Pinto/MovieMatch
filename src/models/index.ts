@@ -2,7 +2,11 @@ type Genres = {
   id: number;
   name: string;
 };
-
+export type ProviderItemType = {
+  logo_path: string;
+  provider_id: number;
+  provider_name: string;
+};
 export type Movie = {
   genreId: number;
   title: string;
@@ -43,7 +47,9 @@ export type Genre = {
 };
 
 export type Provider = {
-  logo_path: string;
-  provider_id: number;
-  provider_name: string;
+  PT: {
+    buy: ProviderItemType[];
+    rent: ProviderItemType[];
+    flatrate: ProviderItemType[];
+  };
 };

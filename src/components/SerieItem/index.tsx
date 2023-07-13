@@ -9,11 +9,7 @@ import {
   TitleArea,
   DescArea,
   DescText,
-  WhereWatchArea,
-  WhereWatchText,
   ProviderArea,
-  ProviderImg,
-  ProviderImgArea,
   ProviderText,
   BackButton,
   MovieInfo,
@@ -37,12 +33,13 @@ import {
   InProduction,
   SerieInfo,
   FavoriteMovie,
+  ProviderItemArea,
 } from './styles';
 
 import api from '../../services/api';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { IMG } from '../../keys';
-import { Movie, Provider, Serie } from '../../models';
+import { Provider, Serie } from '../../models';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome';
 import { RootTabProps } from '../../routes/MainTab';
@@ -52,6 +49,7 @@ import { Loading } from '../Loading';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import nodeApi from '../../services/nodeApi';
+import { ProviderItem } from '../ProviderItem';
 
 export function SerieItem() {
   const route = useRoute<RouteProp<RootTabProps, 'MovieItem'>>();
@@ -62,10 +60,6 @@ export function SerieItem() {
   const platform = route.params.platform;
   const navigation = useNavigation();
 
-  const [flatrateProvider, setFlatrateProvider] = useState<Provider[] | null>(null);
-  const [rentProvider, setRentProvider] = useState<Provider[] | null>(null);
-  const [buyProvider, setBuyProvider] = useState<Provider[] | null>(null);
-  const [loading, setLoading] = useState(false);
   const [favorited, setFavorited] = useState(false);
 
   const { data: serieDetail, isLoading } = useQuery<Serie>(
@@ -73,6 +67,19 @@ export function SerieItem() {
     async () => {
       if (platform === 'tv') {
         return await api.getMovieDetail(id, platform);
+      }
+      return null;
+    },
+    {
+      enabled: platform === 'tv',
+    }
+  );
+
+  const { data: serieProviders } = useQuery<Provider>(
+    ['seriePlatform', id, platform],
+    async () => {
+      if (platform === 'tv') {
+        return await api.getProviders(id, platform);
       }
       return null;
     },
@@ -125,7 +132,7 @@ export function SerieItem() {
   useEffect(() => {
     isFavorited();
   }, [token]);
-
+  console.log(serieProviders?.PT.flatrate);
   return (
     <Container>
       <Scroller showsVerticalScrollIndicator={false}>
@@ -222,6 +229,22 @@ export function SerieItem() {
                   <MaterialCommunityIcons name="movie-off" size={40} color="#fff" />
                 )}
               </DescArea>
+
+              {serieProviders && serieProviders.PT && (
+                <>
+                  <ProviderArea>
+                    <ProviderText>Onde assistir</ProviderText>
+                  </ProviderArea>
+
+                  {serieProviders.PT.flatrate && (
+                    <ProviderItemArea>
+                      {serieProviders.PT.flatrate.map((item, index) => (
+                        <ProviderItem data={item} key={index} />
+                      ))}
+                    </ProviderItemArea>
+                  )}
+                </>
+              )}
 
               {relatedMovie && (
                 <RelatedMoviesArea>

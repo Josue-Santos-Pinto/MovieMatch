@@ -35,11 +35,11 @@ export default {
     );
     return res.data.results;
   },
-  getProviders: async (id: number) => {
+  getProviders: async (id: number, platform: string) => {
     let res = await axios.get(
-      `${API_BASE_URL}/movie/${id}/watch/providers?api_key=${KEY}&language=pt-BR`
+      `${API_BASE_URL}/${platform}/${id}/watch/providers?api_key=${KEY}&language=pt-BR`
     );
-    return res.data;
+    return res.data.results;
   },
   getFindMovies: async (page: number) => {
     let res = await axios.get(
