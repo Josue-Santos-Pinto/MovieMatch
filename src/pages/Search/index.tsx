@@ -13,6 +13,7 @@ import {
   ItemName,
   ItemBar,
   FilterArea,
+  SearchButton,
 } from './styles';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
@@ -62,6 +63,7 @@ export function Search() {
   const searchMovie = () => {
     if (search.trim() != '') {
       setSearchedMovie(search);
+      setCurrentItem('Filmes');
       setPage(1);
     } else {
       Alert.alert('Digite o filme que deseja proucurar');
@@ -90,7 +92,9 @@ export function Search() {
       </HeaderArea>
 
       <SearchArea>
-        <FontAwesome5 name="search" size={22} color="#fff" style={{ marginLeft: 8 }} />
+        <SearchButton onPress={searchMovie}>
+          <FontAwesome5 name="search" size={22} color="#fff" style={{ marginLeft: 8 }} />
+        </SearchButton>
         <SearchInput
           placeholder="Sherlock Holmes"
           placeholderTextColor="#BBBBBB"

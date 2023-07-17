@@ -85,40 +85,47 @@ export const SubmitButtonText = styled.Text`
   font-family: Lato-Bold;
   color: #fff;
 `;
-export const Shadow = styled.TouchableOpacity`
-  background-color: rgba(0, 0, 0, 0.6);
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  justify-content: center;
-  align-items: center;
-  z-index: 9;
+export const ModalContainer = styled.View`
+  background-color: #15141f;
+  flex: 1;
+  padding: 20px;
 `;
 
-export const PhotoInfo = styled.View`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 30%;
-  background-color: #211f30;
-  border-top-left-radius: 40px;
-  border-top-right-radius: 40px;
-  align-items: center;
-  justify-content: center;
-  z-index: 99;
-`;
-export const PhotoOption = styled.TouchableOpacity`
-  width: 100%;
+export const CloseButton = styled.TouchableOpacity`
+  width: 40px;
   height: 40px;
-  margin-vertical: 15px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
   justify-content: center;
   align-items: center;
 `;
-export const PhotoOptionText = styled.Text`
-  font-size: 20px;
-  font-family: Lato-Bold;
+export const ModalTitle = styled.Text`
+  margin-top: 20px;
+  font-size: 24px;
+  font-family: Lato-Regular;
   color: #fff;
+`;
+
+export const IconsArea = styled.View`
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  justify-content: center;
+`;
+
+export const IconButton = styled.TouchableOpacity`
+  width: 80px;
+  height: 80px;
+  border-radius: 15px;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin-right: 15px;
+  margin-vertical: 10px;
+`;
+export const Icon = styled.Image`
+  width: 100%;
+  height: 100%;
 `;

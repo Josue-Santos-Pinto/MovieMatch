@@ -25,6 +25,7 @@ export const HeaderTitle = styled.Text`
   font-size: 24px;
   font-family: Lato-Regular;
 `;
+export const SearchButton = styled.TouchableOpacity``;
 
 export const SearchArea = styled.View`
   width: 90%;

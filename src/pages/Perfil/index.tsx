@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Modal, ScrollView } from 'react-native';
 import {
+  CloseButton,
   Container,
   HeaderArea,
+  Icon,
+  IconButton,
+  IconsArea,
   MenuArea,
   MenuBox,
   MenuText,
-  PhotoInfo,
-  PhotoOption,
-  PhotoOptionText,
-  Shadow,
+  ModalContainer,
+  ModalTitle,
   UserAvatar,
   UserAvatarArea,
   UserCard,
@@ -66,68 +68,27 @@ export function Perfil() {
     },
     { refetchOnWindowFocus: 'always', staleTime: Infinity, cacheTime: 0, refetchInterval: 0 }
   );
+  const { data: avatarIcon } = useQuery<string[]>(
+    ['avatarIcon', token, id],
+    async () => {
+      if (token && id) {
+        return await nodeApi.getImages(id, token);
+      }
+
+      return null;
+    },
+    { refetchOnWindowFocus: 'always', staleTime: Infinity, cacheTime: 0, refetchInterval: 0 }
+  );
   const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
     await AsyncStorage.removeItem('id');
     navigation.reset({ index: 1, routes: [{ name: 'MainTab' }] });
   };
-  const launchGalery = async () => {
-    try {
-      const granted = await request(PERMISSIONS.ANDROID.CAMERA);
-      if (granted === 'granted') {
-        const options: ImageLibraryOptions = {
-          mediaType: 'photo',
-        };
 
-        const result = await launchImageLibrary(options);
-
-        if (result.assets) {
-          let fData = new FormData();
-
-          fData.append('avatar', {
-            uri: result.assets[0].uri!,
-            type: 'image/jpg',
-            name: 'photo.jpg',
-          });
-          let res = await nodeApi.changeUserInfo(id, token, fData);
-          setAvatar(res.updated.avatar);
-          setModalVisible(false);
-          return;
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const launchPhotoByCamera = async () => {
-    try {
-      const granted = await request(PERMISSIONS.ANDROID.CAMERA);
-      if (granted === 'granted') {
-        const options: CameraOptions = {
-          mediaType: 'photo',
-          cameraType: 'front',
-          quality: 1,
-        };
-
-        const result = await launchCamera(options);
-
-        if (result.assets) {
-          let fData = new FormData();
-
-          fData.append('avatar', {
-            uri: result.assets[0].uri!,
-            type: 'image/jpg',
-            name: 'photo.jpg',
-          });
-          let res = await nodeApi.changeUserInfo(id, token, fData);
-          setAvatar(res.updated.avatar);
-          setModalVisible(false);
-          return;
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
+  const changeAvatar = async (item: string) => {
+    setAvatar(item);
+    await nodeApi.changeUserInfo(id, token, data.name, item);
+    setModalVisible(false);
   };
 
   useFocusEffect(
@@ -148,7 +109,7 @@ export function Perfil() {
             <UserCard>
               <UserAvatarArea onPress={() => setModalVisible(true)}>
                 {avatar ? (
-                  <UserAvatar source={{ uri: `${NODE_API}/media/${avatar}` }} resizeMode="cover" />
+                  <UserAvatar source={{ uri: `${NODE_API}/${avatar}` }} resizeMode="cover" />
                 ) : (
                   <FontAwesomeIcon name="user" size={35} color="#bcbcbc" />
                 )}
@@ -174,21 +135,24 @@ export function Perfil() {
             </MenuArea>
           </ScrollView>
           <Modal
-            transparent
             visible={modalVisible}
             animationType="fade"
             onRequestClose={() => setModalVisible(false)}
           >
-            <Shadow onPress={() => setModalVisible(false)}>
-              <PhotoInfo>
-                <PhotoOption onPress={launchGalery}>
-                  <PhotoOptionText>Galeria</PhotoOptionText>
-                </PhotoOption>
-                <PhotoOption onPress={launchPhotoByCamera}>
-                  <PhotoOptionText>Camera</PhotoOptionText>
-                </PhotoOption>
-              </PhotoInfo>
-            </Shadow>
+            <ModalContainer>
+              <ModalTitle>Selecione seu avatar</ModalTitle>
+              <CloseButton onPress={() => setModalVisible(false)}>
+                <FontAwesomeIcon name="times" size={30} color="#bcbcbc" />
+              </CloseButton>
+              <IconsArea>
+                {avatarIcon &&
+                  avatarIcon.map((item, index) => (
+                    <IconButton key={index} onPress={() => changeAvatar(item)}>
+                      <Icon source={{ uri: `${NODE_API}/${item}` }} />
+                    </IconButton>
+                  ))}
+              </IconsArea>
+            </ModalContainer>
           </Modal>
         </>
       )}

@@ -55,13 +55,21 @@ export default {
       console.error(error);
     }
   },
-  changeUserInfo: async (id: string, token: string, fData: FormData) => {
+  changeUserInfo: async (id: string, token: string, name: string, avatar: string) => {
     try {
       const config = {
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      };
+      let data = {
+        name,
+        avatar,
       };
 
-      let res = await axios.put(`${NODE_API}/${id}/user`, fData, config);
+      let res = await axios.put(`${NODE_API}/${id}/user`, qs.stringify(data), config);
+      console.log(res.data);
       return res.data; // A resposta da API
     } catch (error) {
       console.error(error);
@@ -132,6 +140,18 @@ export default {
       };
 
       let res = await axios.post(`${NODE_API}/${id}/favserie`, qs.stringify(data), config);
+      return res.data; // A resposta da API
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  getImages: async (id: string, token: string) => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      let res = await axios.get(`${NODE_API}/${id}/images`, config);
       return res.data; // A resposta da API
     } catch (error) {
       console.error(error);

@@ -63,18 +63,23 @@ export function Login() {
   const handleLogin = async (data: FormDataType) => {
     setIsLoading(true);
     let res = await nodeApi.login(data.email.toLowerCase(), data.password);
-    if (!res.error) {
-      if (res.token) {
-        await AsyncStorage.setItem('token', res.token);
+    if (res) {
+      if (!res.error) {
+        if (res.token) {
+          await AsyncStorage.setItem('token', res.token);
 
-        await AsyncStorage.setItem('id', res.id);
+          await AsyncStorage.setItem('id', res.id);
 
-        navigation.reset({ index: 1, routes: [{ name: 'MainTab' }] });
+          navigation.reset({ index: 1, routes: [{ name: 'MainTab' }] });
+          setIsLoading(false);
+        }
+      } else {
         setIsLoading(false);
+        Alert.alert(res.error);
       }
     } else {
+      console.log('Ocorreu um erro');
       setIsLoading(false);
-      Alert.alert(res.error);
     }
   };
 

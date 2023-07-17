@@ -3,16 +3,18 @@ import {
   Avatar,
   AvatarArea,
   ChangePhotoArea,
+  CloseButton,
   Container,
   ErrorMessage,
   HeaderArea,
+  Icon,
+  IconButton,
+  IconsArea,
   Input,
   InputArea,
   InputBox,
-  PhotoInfo,
-  PhotoOption,
-  PhotoOptionText,
-  Shadow,
+  ModalContainer,
+  ModalTitle,
   SubmitButton,
   SubmitButtonText,
 } from './styles';
@@ -22,18 +24,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import nodeApi from '../../services/nodeApi';
 import { NODE_API } from '../../keys';
-import { useEffect, useState } from 'react';
-import { PERMISSIONS, request } from 'react-native-permissions';
-import {
-  CameraOptions,
-  ImageLibraryOptions,
-  launchCamera,
-  launchImageLibrary,
-} from 'react-native-image-picker';
+import { useCallback, useEffect, useState } from 'react';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 type FormDataType = {
   name: string;
@@ -42,6 +38,7 @@ type FormDataType = {
 const signUpSchema = yup.object({
   name: yup
     .string()
+    .required()
     .min(5, 'O nome deve ter pelo menos 5 caracteres')
     .max(25, 'O nome deve ter no máximo 25 caracteres'),
 });
@@ -59,11 +56,24 @@ export function UserPerfil() {
     data: user,
     isLoading,
     isError,
+    refetch,
   } = useQuery(
     ['userInfo', token, id],
     async () => {
       if (token && id) {
         return await nodeApi.getUserInfo(id, token);
+      }
+
+      return null;
+    },
+    { refetchOnWindowFocus: 'always', staleTime: Infinity, cacheTime: 0, refetchInterval: 0 }
+  );
+
+  const { data: avatarIcon } = useQuery<string[]>(
+    ['avatarIcon', token, id],
+    async () => {
+      if (token && id) {
+        return await nodeApi.getImages(id, token);
       }
 
       return null;
@@ -82,30 +92,32 @@ export function UserPerfil() {
     },
   });
 
+  console.log(avatarIcon);
+
   const handleUpdateUser = async (data: FormDataType) => {
     setLoading(true);
 
-    if (avatar) {
-      fData.append('avatar', {
-        uri: avatar,
-        type: 'image/jpg',
-        name: 'photo.jpg',
-      });
-      let res = await nodeApi.changeUserInfo(id, token, fData);
-      console.log(res);
-      navigation.navigate('Perfil');
-      setAvatar('');
-      setLoading(false);
-    }
-    if (data.name != user.name) {
-      fData.append('name', data.name);
-      let res = await nodeApi.changeUserInfo(id, token, fData);
-      navigation.navigate('Perfil');
-      setLoading(false);
-    }
+    let res = await nodeApi.changeUserInfo(id, token, data.name, avatar);
+    console.log(res);
+    navigation.navigate('Perfil');
+    setAvatar('');
+    setLoading(false);
   };
 
-  const launchGalery = async () => {
+  const changeAvatar = (item: string) => {
+    setAvatar(item);
+    setModalVisible(false);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [])
+  );
+
+  {
+    // CHANGE PHOTO WITH CAMERA OR GALLERY FEAT
+    /* const launchGalery = async () => {
     try {
       const granted = await request(PERMISSIONS.ANDROID.CAMERA);
       if (granted === 'granted') {
@@ -124,8 +136,8 @@ export function UserPerfil() {
     } catch (err) {
       console.log(err);
     }
-  };
-  const launchPhotoByCamera = async () => {
+  };*/
+    /*const launchPhotoByCamera = async () => {
     try {
       const granted = await request(PERMISSIONS.ANDROID.CAMERA);
       if (granted === 'granted') {
@@ -147,7 +159,8 @@ export function UserPerfil() {
     } catch (err) {
       console.log(err);
     }
-  };
+  };*/
+  }
 
   return (
     <Container>
@@ -158,7 +171,7 @@ export function UserPerfil() {
               {user.avatar && !avatar && (
                 <Avatar
                   source={{
-                    uri: `${NODE_API}/media/${user.avatar}`,
+                    uri: `${NODE_API}/${user.avatar}`,
                   }}
                   resizeMode="cover"
                 />
@@ -166,7 +179,7 @@ export function UserPerfil() {
               {avatar != '' && (
                 <Avatar
                   source={{
-                    uri: avatar,
+                    uri: `${NODE_API}/${avatar}`,
                   }}
                   resizeMode="cover"
                 />
@@ -177,7 +190,7 @@ export function UserPerfil() {
           )}
 
           <ChangePhotoArea onPress={() => setModalVisible(true)}>
-            <FontAwesomeIcon name="camera" size={30} color="#000" />
+            <FontAwesomeIcon name="pen" size={25} color="#000" />
           </ChangePhotoArea>
         </AvatarArea>
       </HeaderArea>
@@ -214,21 +227,24 @@ export function UserPerfil() {
       )}
 
       <Modal
-        transparent
         visible={modalVisible}
         animationType="fade"
         onRequestClose={() => setModalVisible(false)}
       >
-        <Shadow onPress={() => setModalVisible(false)}>
-          <PhotoInfo>
-            <PhotoOption onPress={launchGalery}>
-              <PhotoOptionText>Galeria</PhotoOptionText>
-            </PhotoOption>
-            <PhotoOption onPress={launchPhotoByCamera}>
-              <PhotoOptionText>Camera</PhotoOptionText>
-            </PhotoOption>
-          </PhotoInfo>
-        </Shadow>
+        <ModalContainer>
+          <ModalTitle>Selecione seu avatar</ModalTitle>
+          <CloseButton onPress={() => setModalVisible(false)}>
+            <FontAwesomeIcon name="times" size={30} color="#bcbcbc" />
+          </CloseButton>
+          <IconsArea>
+            {avatarIcon &&
+              avatarIcon.map((item, index) => (
+                <IconButton key={index} onPress={() => changeAvatar(item)}>
+                  <Icon source={{ uri: `${NODE_API}/${item}` }} />
+                </IconButton>
+              ))}
+          </IconsArea>
+        </ModalContainer>
       </Modal>
     </Container>
   );
