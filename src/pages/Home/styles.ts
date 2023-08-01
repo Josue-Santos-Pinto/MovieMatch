@@ -65,9 +65,8 @@ export const DailyMovieReload = styled.TouchableOpacity`
   position: absolute;
   top: 5px;
   right: 10px;
-  min-width: 80px;
-  max-width: 90%;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   justify-content: center;
   align-items: center;
   padding-horizontal: 20px;
