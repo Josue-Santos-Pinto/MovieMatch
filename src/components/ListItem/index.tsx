@@ -14,7 +14,7 @@ type dataProps = {
   platform: string;
 };
 
-export function ListItem({ data, size, platform }: dataProps) {
+ function ListItem({ data, size, platform }: dataProps) {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -47,3 +47,4 @@ export function ListItem({ data, size, platform }: dataProps) {
     </Item>
   );
 }
+export default React.memo(ListItem);

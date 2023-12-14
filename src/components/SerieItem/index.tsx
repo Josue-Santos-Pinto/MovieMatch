@@ -43,7 +43,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome';
 import { RootTabProps } from '../../routes/MainTab';
 import { useQuery } from 'react-query';
-import { ListItem } from '../ListItem';
+import  ListItem  from '../ListItem';
 import { Loading } from '../Loading';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';

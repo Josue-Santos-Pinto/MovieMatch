@@ -13,7 +13,7 @@ type dataProps = {
   platform: string;
 };
 
-export function SearchListItem({ data, platform }: dataProps) {
+ function SearchListItem({ data, platform }: dataProps) {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -57,3 +57,5 @@ export function SearchListItem({ data, platform }: dataProps) {
     </Container>
   );
 }
+
+export default React.memo(SearchListItem)

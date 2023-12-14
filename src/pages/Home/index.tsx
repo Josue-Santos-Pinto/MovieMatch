@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { FlatList, Dimensions, ActivityIndicator, ScrollView, ListRenderItemInfo, FlatListProps } from 'react-native';
 import { useQuery } from 'react-query';
 import api from '../../services/api';
-import { ListItem } from '../../components/ListItem';
+import  ListItem  from '../../components/ListItem';
 
 import {
   Container,

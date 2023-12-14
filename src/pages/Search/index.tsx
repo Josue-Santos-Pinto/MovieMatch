@@ -19,12 +19,12 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import { Movie } from '../../models';
 import { FlatList, Alert, ListRenderItemInfo } from 'react-native';
-import { ListItem } from '../../components/ListItem';
+import  ListItem  from '../../components/ListItem';
 import { Loading } from '../../components/Loading';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery } from 'react-query';
 import api from '../../services/api';
-import { SearchListItem } from '../../components/SearchListItem';
+import  SearchListItem  from '../../components/SearchListItem';
 import { Pagination } from '../../components/Pagination';
 export function Search() {
   const [search, setSearch] = useState('');
