@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Item, ItemImg, StarsArea, StarsText } from './styles';
+import { Item, StarsArea, StarsText } from './styles';
 import { Movie } from '../../models';
 import { IMG } from '../../keys';
 import { useNavigation } from '@react-navigation/native';
 import api from '../../services/api';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Loading } from '../Loading';
+import FastImage from 'react-native-fast-image';
 
 type dataProps = {
   data: Movie;
@@ -27,7 +28,8 @@ export function ListItem({ data, size, platform }: dataProps) {
       size={size}
     >
       {isLoading && <Loading load={isLoading} />}
-      <ItemImg
+      <FastImage
+      style={{width: '100%', height: '100%'}}
         source={{
           uri: `${
             data.poster_path
@@ -35,7 +37,7 @@ export function ListItem({ data, size, platform }: dataProps) {
               : 'https://firebasestorage.googleapis.com/v0/b/guitarstore-a2356.appspot.com/o/image-coming-soon-placeholder.png?alt=media&token=a192c2bb-1477-4350-944d-777cd225a33d'
           }`,
         }}
-        resizeMode="cover"
+        resizeMode={FastImage.resizeMode.cover}
         onLoad={handleImageSource}
       />
       <StarsArea>

@@ -14,10 +14,7 @@ export const Item = styled.TouchableOpacity<Props>`
   overflow: hidden;
 `;
 
-export const ItemImg = styled.Image`
-  width: 100%;
-  height: 100%;
-`;
+
 
 export const StarsArea = styled.View`
   position: absolute;

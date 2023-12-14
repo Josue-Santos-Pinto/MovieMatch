@@ -30,6 +30,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Controller, useForm } from 'react-hook-form';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 
 type FormDataType = {
   name: string;
@@ -115,52 +116,7 @@ export function UserPerfil() {
     }, [])
   );
 
-  {
-    // CHANGE PHOTO WITH CAMERA OR GALLERY FEAT
-    /* const launchGalery = async () => {
-    try {
-      const granted = await request(PERMISSIONS.ANDROID.CAMERA);
-      if (granted === 'granted') {
-        const options: ImageLibraryOptions = {
-          mediaType: 'photo',
-        };
-
-        const result = await launchImageLibrary(options);
-
-        if (result.assets) {
-          setAvatar(result.assets[0].uri!);
-          setModalVisible(false);
-          return;
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };*/
-    /*const launchPhotoByCamera = async () => {
-    try {
-      const granted = await request(PERMISSIONS.ANDROID.CAMERA);
-      if (granted === 'granted') {
-        const options: CameraOptions = {
-          mediaType: 'photo',
-          cameraType: 'front',
-          quality: 1,
-        };
-
-        const result = await launchCamera(options);
-
-        if (result.assets) {
-          console.log(result.assets);
-          setAvatar(result.assets[0].uri!);
-          setModalVisible(false);
-          return;
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };*/
-  }
+  
 
   return (
     <Container>
@@ -169,19 +125,21 @@ export function UserPerfil() {
           {user && (
             <>
               {user.avatar && !avatar && (
-                <Avatar
+                <FastImage
+                style={{width: '100%', height: '100%', borderRadius: 90}}
                   source={{
                     uri: `${NODE_API}/${user.avatar}`,
                   }}
-                  resizeMode="cover"
+                  resizeMode={FastImage.resizeMode.cover}
                 />
               )}
               {avatar != '' && (
-                <Avatar
+                <FastImage
+                style={{width: '100%', height: '100%', borderRadius: 90}}
                   source={{
                     uri: `${NODE_API}/${avatar}`,
                   }}
-                  resizeMode="cover"
+                  resizeMode={FastImage.resizeMode.cover}
                 />
               )}
 

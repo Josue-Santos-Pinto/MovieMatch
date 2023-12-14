@@ -41,6 +41,7 @@ export const SearchInput = styled.TextInput`
   flex: 1;
   margin-left: 10px;
   padding: 8px;
+  color: #FFF;
 `;
 export const FilterArea = styled.View`
   flex-direction: row;

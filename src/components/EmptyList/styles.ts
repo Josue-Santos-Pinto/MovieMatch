@@ -6,7 +6,4 @@ export const Container = styled.View`
   align-items: center;
 `;
 
-export const EmptyImg = styled.Image`
-  width: 40%;
-  height: 40%;
-`;
+

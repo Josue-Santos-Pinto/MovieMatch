@@ -4,7 +4,6 @@ import {
   Container,
   Scroller,
   BannerArea,
-  BannerImg,
   Title,
   TitleArea,
   DescArea,
@@ -50,6 +49,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import nodeApi from '../../services/nodeApi';
 import { ProviderItem } from '../ProviderItem';
+import FastImage from 'react-native-fast-image';
 
 export function SerieItem() {
   const route = useRoute<RouteProp<RootTabProps, 'MovieItem'>>();
@@ -144,7 +144,8 @@ export function SerieItem() {
         {serieDetail && (
           <>
             <BannerArea>
-              <BannerImg
+              <FastImage
+              style={{width: '100%', height: '100%'}}
                 source={{
                   uri: `${
                     serieDetail.backdrop_path
@@ -152,7 +153,7 @@ export function SerieItem() {
                       : 'https://firebasestorage.googleapis.com/v0/b/guitarstore-a2356.appspot.com/o/image-coming-soon-placeholder.png?alt=media&token=a192c2bb-1477-4350-944d-777cd225a33d'
                   }`,
                 }}
-                resizeMode="cover"
+                resizeMode={FastImage.resizeMode.cover}
               />
             </BannerArea>
             {userId && token && (

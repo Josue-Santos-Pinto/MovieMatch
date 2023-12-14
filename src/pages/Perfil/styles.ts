@@ -30,10 +30,7 @@ export const UserAvatarArea = styled.TouchableOpacity`
   overflow: hidden;
   background-color: #fff;
 `;
-export const UserAvatar = styled.Image`
-  width: 100%;
-  height: 100%;
-`;
+
 export const UserInfoArea = styled.View`
   flex: 1;
   margin-left: 10px;
@@ -111,7 +108,4 @@ export const IconButton = styled.TouchableOpacity`
   margin-right: 15px;
   margin-vertical: 10px;
 `;
-export const Icon = styled.Image`
-  width: 100%;
-  height: 100%;
-`;
+

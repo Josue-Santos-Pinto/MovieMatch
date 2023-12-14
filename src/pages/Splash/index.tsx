@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Container, EmptyImg } from './styles';
+import { Container } from './styles';
 import AnimatedLottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserActionTypes from '../../redux/user/actions-type';

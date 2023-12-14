@@ -10,7 +10,4 @@ export const Container = styled.View`
   margin-horizontal: 10px;
   margin-vertical: 5px;
 `;
-export const ProviderLogo = styled.Image`
-  width: 100%;
-  height: 100%;
-`;
+

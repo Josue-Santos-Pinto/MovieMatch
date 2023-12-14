@@ -1,21 +1,24 @@
 import styled from 'styled-components/native';
 
+export const Container = styled.View`
+  width: 50%;
+  justify-content: center;
+  align-items: center;
+`
 export const Item = styled.TouchableOpacity`
-  min-width: 150px;
-  min-height: 150px;
+
+  width: 150px;
+  height: 200px;
   max-height: 200px;
   border-radius: 30px;
-  margin-horizontal: 6px;
+  margin-horizontal: 10px;
   margin-vertical: 10px;
   justify-content: center;
   align-items: center;
   overflow: hidden;
 `;
 
-export const ItemImg = styled.Image`
-  width: 100%;
-  height: 100%;
-`;
+
 
 export const StarsArea = styled.View`
   position: absolute;

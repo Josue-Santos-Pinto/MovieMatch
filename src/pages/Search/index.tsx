@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Container,
   Scroller,
@@ -18,7 +18,7 @@ import {
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import { Movie } from '../../models';
-import { FlatList, Alert } from 'react-native';
+import { FlatList, Alert, ListRenderItemInfo } from 'react-native';
 import { ListItem } from '../../components/ListItem';
 import { Loading } from '../../components/Loading';
 import { useNavigation } from '@react-navigation/native';
@@ -69,6 +69,22 @@ export function Search() {
       Alert.alert('Digite o filme que deseja proucurar');
     }
   };
+
+  const renderAvarageItem = useCallback(({item}: ListRenderItemInfo<Movie>)=>{
+    return <SearchListItem data={item} platform="movie"/>
+  },[average])
+
+  const renderSeriesItem = useCallback(({item}: ListRenderItemInfo<Movie>)=>{
+    return <SearchListItem data={item} platform="tv" />
+  },[series])
+
+  const renderDocumentaryItem = useCallback(({item}: ListRenderItemInfo<Movie>)=>{
+    return <SearchListItem data={item} platform="movie" />
+  },[documentary])
+
+  const renderListItem = useCallback(({item}: ListRenderItemInfo<Movie>)=>{
+    return <SearchListItem data={item} platform={listPlatform} />
+  },[list])
 
   useEffect(() => {
     if (currentItem == 'Filmes') {
@@ -131,8 +147,8 @@ export function Search() {
         {!list && currentItem === 'Filmes' && average && average.results && (
           <FlatList
             data={average.results}
-            renderItem={({ item, index }) => <SearchListItem data={item} platform="movie" />}
-            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderAvarageItem}
+            keyExtractor={(item: Movie) => item.id.toString()}
             numColumns={2}
             showsVerticalScrollIndicator={false}
             ListFooterComponent={
@@ -143,7 +159,7 @@ export function Search() {
         {!list && currentItem === 'Séries' && series && series.results && (
           <FlatList
             data={series.results}
-            renderItem={({ item, index }) => <SearchListItem data={item} platform="tv" />}
+            renderItem={renderSeriesItem}
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
             showsVerticalScrollIndicator={false}
@@ -155,7 +171,7 @@ export function Search() {
         {!list && currentItem === 'Documentários' && documentary && documentary.results && (
           <FlatList
             data={documentary.results}
-            renderItem={({ item, index }) => <SearchListItem data={item} platform="movie" />}
+            renderItem={renderDocumentaryItem }
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
             showsVerticalScrollIndicator={false}
@@ -168,7 +184,7 @@ export function Search() {
         {list && list.results.length > 0 && (
           <FlatList
             data={list.results}
-            renderItem={({ item, index }) => <SearchListItem data={item} platform={listPlatform} />}
+            renderItem={renderListItem }
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
             showsVerticalScrollIndicator={false}
@@ -178,7 +194,7 @@ export function Search() {
           />
         )}
 
-        {isLoading && <Loading load={isLoading} />}
+        
 
         {list && list.results.length == 0 && (
           <NotFoundArea>

@@ -4,7 +4,6 @@ import {
   CloseButton,
   Container,
   HeaderArea,
-  Icon,
   IconButton,
   IconsArea,
   MenuArea,
@@ -12,7 +11,6 @@ import {
   MenuText,
   ModalContainer,
   ModalTitle,
-  UserAvatar,
   UserAvatarArea,
   UserCard,
   UserEmail,
@@ -27,15 +25,9 @@ import nodeApi from '../../services/nodeApi';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Loading } from '../../components/Loading';
-import {
-  launchCamera,
-  launchImageLibrary,
-  ImageLibraryOptions,
-  CameraOptions,
-} from 'react-native-image-picker';
-import { request, PERMISSIONS } from 'react-native-permissions';
 import { NODE_API } from '../../keys';
 import { RootState } from '../../redux/store';
+import FastImage from 'react-native-fast-image';
 
 type menuPerfilType = {
   name: string;
@@ -109,7 +101,7 @@ export function Perfil() {
             <UserCard>
               <UserAvatarArea onPress={() => setModalVisible(true)}>
                 {avatar ? (
-                  <UserAvatar source={{ uri: `${NODE_API}/${avatar}` }} resizeMode="cover" />
+                  <FastImage style={{width: '100%', height: '100%'}} source={{ uri: `${NODE_API}/${avatar}` }} resizeMode={FastImage.resizeMode.cover} />
                 ) : (
                   <FontAwesomeIcon name="user" size={35} color="#bcbcbc" />
                 )}
@@ -148,7 +140,7 @@ export function Perfil() {
                 {avatarIcon &&
                   avatarIcon.map((item, index) => (
                     <IconButton key={index} onPress={() => changeAvatar(item)}>
-                      <Icon source={{ uri: `${NODE_API}/${item}` }} />
+                      <FastImage style={{width: '100%', height: '100%'}} source={{ uri: `${NODE_API}/${item}` }} />
                     </IconButton>
                   ))}
               </IconsArea>

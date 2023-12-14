@@ -7,7 +7,4 @@ export const Container = styled.View`
   background-color: #15141f;
 `;
 
-export const EmptyImg = styled.Image`
-  width: 40%;
-  height: 40%;
-`;
+

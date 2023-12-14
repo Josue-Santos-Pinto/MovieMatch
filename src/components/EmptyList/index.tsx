@@ -1,9 +1,10 @@
-import { Container, EmptyImg } from './styles';
+import FastImage from 'react-native-fast-image';
+import { Container } from './styles';
 
 export function EmptyList() {
   return (
     <Container>
-      <EmptyImg source={require('../../assets/slash-star.png')} resizeMode="contain" />
+      <FastImage style={{width: '40%', height: '40%'}} source={require('../../assets/slash-star.png')} resizeMode={FastImage.resizeMode.cover} />
     </Container>
   );
 }

@@ -30,10 +30,7 @@ export const FavoriteMovie = styled.TouchableOpacity`
   -webkit-backdrop-filter: blur(4.8px);
   border: 1px solid rgba(255, 255, 255, 0.23);
 `;
-export const BannerImg = styled.Image`
-  width: 100%;
-  height: 100%;
-`;
+
 export const MovieInfo = styled.View`
   padding-horizontal: 20px;
 `;

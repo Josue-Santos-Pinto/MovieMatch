@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { FlatList, Dimensions, ActivityIndicator, ScrollView } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { FlatList, Dimensions, ActivityIndicator, ScrollView, ListRenderItemInfo, FlatListProps } from 'react-native';
 import { useQuery } from 'react-query';
 import api from '../../services/api';
 import { ListItem } from '../../components/ListItem';
@@ -12,7 +12,6 @@ import {
   TrendingMoviesArea,
   TrendingMoviesTitle,
   TrendingMovies,
-  DailyMovieImg,
   DailyMovieInfo,
   DailyMovieInfoText,
   DailyMovieReload,
@@ -26,6 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserActionTypes from '../../redux/user/actions-type';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import FastImage from 'react-native-fast-image';
 
 export function Home() {
   const navigation = useNavigation();
@@ -52,6 +52,12 @@ export function Home() {
       ? setRandomMovieIndex(Math.floor(Math.random() * randomMovie?.length))
       : setRandomMovieIndex(Math.floor(Math.random() * 20));
   };
+
+  const renderItem = useCallback(({item}: ListRenderItemInfo<Movie>)=>{
+    return <ListItem data={item} platform="movie"/>
+  },[data])
+
+  
 
   useEffect(() => {
     generateRandomNumbers();
@@ -93,7 +99,8 @@ export function Home() {
             activeOpacity={0.7}
           >
             {loading && <Loading load={loading} />}
-            <DailyMovieImg
+            <FastImage
+              style={{width: '100%', height: '100%'}}
               source={{
                 uri: `${
                   randomMovie[randomMovieIndex].backdrop_path
@@ -102,7 +109,7 @@ export function Home() {
                 }`,
               }}
               onLoad={() => setLoading(false)}
-              resizeMode="cover"
+              resizeMode={FastImage.resizeMode.cover}
             />
             <DailyMovieInfo>
               <DailyMovieInfoText>Sugestão de filme: </DailyMovieInfoText>
@@ -124,8 +131,8 @@ export function Home() {
             {data.results && data.results.length > 0 && (
               <FlatList
                 data={data.results}
-                renderItem={({ item, index }) => <ListItem data={item} platform="movie" />}
-                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderItem}
+                keyExtractor={(item: Movie) => item.id.toString()}
                 horizontal
                 showsHorizontalScrollIndicator={false}
               />

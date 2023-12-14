@@ -4,7 +4,6 @@ import {
   BackButton,
   Container,
   GoToRegisterButton,
-  HeaderImg,
   HeaderLogo,
   HeaderLogoArea,
   Input,
@@ -29,6 +28,7 @@ import UserActionTypes from '../../redux/user/actions-type';
 import { useEffect, useState } from 'react';
 import { Loading } from '../../components/Loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FastImage from 'react-native-fast-image';
 
 type FormDataType = {
   email: string;
@@ -91,7 +91,7 @@ export function Login() {
       <ScrollView>
         <HeaderLogoArea>
           <HeaderLogo>
-            <HeaderImg source={require('../../assets/cinecam.png')} resizeMode="cover" />
+            <FastImage style={{width: '100%', height: '100%'}} source={require('../../assets/cinecam.png')} resizeMode={FastImage.resizeMode.cover} />
           </HeaderLogo>
         </HeaderLogoArea>
 

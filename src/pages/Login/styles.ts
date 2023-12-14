@@ -44,10 +44,7 @@ export const HeaderLogo = styled.View`
   overflow: hidden;
 `;
 
-export const HeaderImg = styled.Image`
-  width: 100%;
-  height: 100%;
-`;
+
 
 export const InputBox = styled.View`
   width: 80%;

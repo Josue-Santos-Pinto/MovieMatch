@@ -26,6 +26,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Loading } from '../../components/Loading';
 import { useState } from 'react';
+import FastImage from 'react-native-fast-image';
 
 type FormDataType = {
   name: string;
@@ -107,7 +108,7 @@ export function Register() {
 
         <HeaderLogoArea>
           <HeaderLogo>
-            <HeaderImg source={require('../../assets/cinecam.png')} resizeMode="cover" />
+            <FastImage style={{width: '100%', height: '100%'}} source={require('../../assets/cinecam.png')} resizeMode={FastImage.resizeMode.cover} />
           </HeaderLogo>
         </HeaderLogoArea>
 

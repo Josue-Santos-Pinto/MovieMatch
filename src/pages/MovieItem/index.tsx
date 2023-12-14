@@ -4,7 +4,6 @@ import {
   Container,
   Scroller,
   BannerArea,
-  BannerImg,
   Title,
   TitleArea,
   DescArea,
@@ -50,6 +49,7 @@ import nodeApi from '../../services/nodeApi';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { ProviderItem } from '../../components/ProviderItem';
+import FastImage from 'react-native-fast-image';
 
 export function MovieItem() {
   const route = useRoute<RouteProp<RootTabProps, 'MovieItem'>>();
@@ -153,19 +153,23 @@ export function MovieItem() {
         </BackButton>
         {movieDetail && !serieDetail && (
           <>
+              
             <BannerArea>
-              {loading && <Loading load={loading} />}
-              <BannerImg
+            {loading && <Loading load={loading} />}
+              <FastImage
+                style={{width: '100%', height: '100%'}}
                 source={{
                   uri: `${
                     movieDetail.backdrop_path
                       ? IMG + movieDetail.backdrop_path
                       : 'https://firebasestorage.googleapis.com/v0/b/guitarstore-a2356.appspot.com/o/image-coming-soon-placeholder.png?alt=media&token=a192c2bb-1477-4350-944d-777cd225a33d'
                   }`,
+                  priority: FastImage.priority.normal,
                 }}
-                resizeMode="cover"
+                resizeMode={FastImage.resizeMode.cover}
                 onLoad={() => setLoading(false)}
               />
+              
             </BannerArea>
             {userId && token && (
               <FavoriteMovie onPress={() => favoriteHandle()}>

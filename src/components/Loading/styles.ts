@@ -5,6 +5,7 @@ export const LoadingArea = styled.View`
   min-height: 100px;
   justify-content: center;
   align-items: center;
+  position: absolute;
 `;
 
 export const Load = styled.ActivityIndicator``;

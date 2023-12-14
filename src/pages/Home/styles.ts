@@ -37,10 +37,7 @@ export const DailyMovie = styled.TouchableOpacity<Props>`
   border-width: ${(props) => (props.load ? '1px' : '0')};
   border-color: #bcbcbc;
 `;
-export const DailyMovieImg = styled.Image`
-  width: 100%;
-  height: 100%;
-`;
+
 export const DailyMovieInfo = styled.View`
   position: absolute;
   bottom: 5px;
